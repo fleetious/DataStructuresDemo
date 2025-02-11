@@ -12,7 +12,7 @@ namespace DataStructures
     {
         static void Main(string[] args)
         {
-            System.Collections.Generic.List<int> testList = new()
+            System.Collections.Generic.List<int> testList = new();
         }
     }
 }

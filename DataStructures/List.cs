@@ -19,7 +19,7 @@ namespace DataStructures
 
         public List()
         {
-            
+            array = new T[1];
         }
 
         public void Add(T item)
@@ -29,11 +29,20 @@ namespace DataStructures
             array[Count] = item;
             Count++;
         }
-        
-        // TODO: This function fills the empty index with proceeding values after calling RemoveAt
+
+        public void RemoveAt(int index)
+        {
+            if(Count < 2) return;
+
+            MoveDownArray(index, Count);
+            Count--;
+        }
         private void MoveDownArray(int from, int to)
         {
-            
+            for(int i = from; i < to - 1; i++)
+            {
+                array[i] = array[i + 1];
+            }
         }
         
         private void ExpandArray()

@@ -24,6 +24,15 @@ namespace DataStructures
 
         public void Add(T item)
         {
+            if(Count == array.Length) ExpandArray();
+            
+            array[Count] = item;
+            Count++;
+        }
+        
+        // TODO: This function fills the empty index with proceeding values after calling RemoveAt
+        private void MoveDownArray(int from, int to)
+        {
             
         }
         

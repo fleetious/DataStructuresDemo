@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataStructures
+﻿namespace DataStructures
 {
     internal class List<T>
     {
@@ -15,7 +8,7 @@ namespace DataStructures
         {
             get;
             private set;
-        } = 0;
+        }
 
         public List()
         {
@@ -32,7 +25,12 @@ namespace DataStructures
 
         public void RemoveAt(int index)
         {
-            if(Count < 2) return;
+            if (Count < 2)
+            {
+                Console.Clear();
+                Console.WriteLine("ERROR: Removal of an element will cause array to be empty");
+                return;
+            }
 
             MoveDownArray(index, Count);
             Count--;

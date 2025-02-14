@@ -1,9 +1,23 @@
+using System;
 using Xunit;
 
 namespace DataStructures.Tests;
 
 public class ListTest
 {
+    private List<int> list;
+
+    private void CreateRandomList(int size)
+    {
+        list = new List<int>();
+        Random rand = new Random();
+
+        for(int i = 0; i < size; i++)
+        {
+            list.Add(rand.Next());
+        }
+    }
+    
     // Apparently I can't do generics in xunit :sob:
     // Also arrays as inputs apparently don't work because of an error with InlineData expecting a semicolon
     [Theory]

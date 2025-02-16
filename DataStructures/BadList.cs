@@ -1,9 +1,8 @@
 ﻿namespace DataStructures
 {
-    internal class List<T>
+    public class BadList<T>
     {
         private T[] array;
-        private HashSet<T> hashSet; // for fast this.Contains lookups
 
         public int Count
         {
@@ -11,47 +10,67 @@
             private set;
         }
 
-        public List()
+        public BadList()
         {
             array = new T[1];
-            hashSet = new ();
         }
 
         public void Add(T item)
         {
             if(Count == array.Length) ExpandArray();
             
-            hashSet.Add(item);
             array[Count] = item;
             Count++;
         }
 
-        public void RemoveAt(int index)
+        public bool RemoveAt(int index)
         {
-            if (Count < 2)
+            if (Count == 0)
             {
-                Console.Clear();
-                Console.WriteLine("ERROR: Removal of an element will cause array to be empty");
-                return;
+                return false;
             }
-            hashSet.Remove(array[index]);
             MoveDownArray(index, Count, 1);
             Count--;
+
+            return true;
+        }
+
+        public bool RemoveValue(T value)
+        {
+            if (Count == 0)
+            {
+                return false;
+            }
+
+            for (int i = Count; i > -1; i--)
+            {
+                if(array[i].Equals(value))
+                {
+                    MoveDownArray(i, Count, 1);
+                    Count--;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void Insert(T item, int index)
         {
-            if(Count == array.Length) ExpandArray();
+            if(index >= array.Length) ExpandArray();
             if(index < Count) MoveDownArray(index, Count, -1); // -1 moves all the values in the array UP by one index
             
-            hashSet.Add(item);
             array[index] = item;
-            Count++;
+            Count = index;
         }
 
         public bool Contains(T item)
         {
-            return hashSet.Contains(item);
+            for (int i = 0; i < Count; i++)
+            {
+                if(array[i].Equals(item)) return true;
+            }
+            return false;
         }
         private void MoveDownArray(int from, int to, int increment)
         {

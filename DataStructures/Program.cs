@@ -13,6 +13,9 @@
  *      A demo implementation to ensure that List can work in real-worldish situations.
  */
 
+using System;
+using System.Collections.Generic;
+
 namespace DataStructures
 {
     internal class Program
@@ -23,7 +26,9 @@ namespace DataStructures
             testList.Add(1);
             testList.Add(2);
             testList.Add(3);
-            testList.Insert(0, 600);
+            testList.Add(3);
+
+            testList.Remove(3);
 
             for (int i = 0; i < testList.Count; i++)
             {

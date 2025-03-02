@@ -28,7 +28,7 @@ namespace DataStructures
             testList.Add(3);
             testList.Add(3);
 
-            testList.Remove(3);
+            testList.Remove(2);
 
             for (int i = 0; i < testList.Count; i++)
             {

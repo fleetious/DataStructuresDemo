@@ -56,7 +56,7 @@
         public void Insert(T item, int index)
         {
             if (index >= array.Length) ExpandArray();
-            if (index < Count) MoveDownArray(index, Count, -1); // -1 moves all the values in the array UP by one index
+            if (index < Count) MoveDownArray(index + 1, Count, -1); // -1 moves all the values in the array UP by one index
 
             array[index] = item;
             Count = index;

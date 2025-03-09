@@ -18,6 +18,12 @@ public class ListTest
         return list;
     }
 
+    private int GetRandomNumber(int min, int max)
+    {
+        Console.WriteLine("Roll a dice and input the result: ");
+        return int.Parse(Console.ReadLine());
+    }
+
     [Fact]
     public void EmptyTest()
     {
@@ -94,9 +100,9 @@ public class ListTest
     }
 
     [Theory] // TODO: UNITTTTT TESTTTTT
-    [InlineData(new int[] { 5, 6, 7, 8, 9, 6 }, 3, new int[] { 8, 5 }, new int[] { 6, 7, 9, 6 })]
-    [InlineData(new int[] { 5, 6, 7, 8, 9, 6 }, 3, new int[] { 5 }, new int[] { 6, 7, 8, 9, 6 })]
-    public void Insert(int[] nums, int[] valuesToInsert, int[] resultArray)
+    [InlineData(new int[] { 5, 6, 7, 8, 9, 6 }, new int[] { 5, 2 }, new int[] { 8, 5 }, new int[] { 5, 6, 5, 7, 8, 9, 8 })]
+    [InlineData(new int[] { 6, 7, 8, 9, 6 }, new int[] { 0 }, new int[] { 5 }, new int[] { 5, 6, 7, 8, 9, 6 })]
+    public void Insert(int[] nums, int[] indexesToInsert, int[] valuesToInsert, int[] resultArray)
     {
         var list = new GenericList<int>();
 
@@ -107,7 +113,7 @@ public class ListTest
 
         for (int i = 0; i < valuesToInsert.Length; i++)
         {
-            list.Insert(valuesToInsert[i], (new Random()).Next(0, 5));
+            list.Insert(valuesToInsert[i], indexesToInsert[i]);
         }
 
         for (int i = 0; i < list.Count; i++)

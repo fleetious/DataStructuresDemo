@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataStructures
 {
-    class Node<T>
+    public class Node<T>
     {
         public T Value;
         public Node<T> Next;
@@ -18,7 +18,7 @@ namespace DataStructures
             Next = next;
         }
     }
-    class LinkedList<T>
+    public class GenericLinkedList<T>
     {
         public Node<T> Head { get; private set; }
         public Node<T> Tail { get; private set; }
@@ -32,15 +32,33 @@ namespace DataStructures
         }
 
         public void AddLast(T value) // add a new tail at the end of the list
-        {
-            Tail.Next = new Node<T>(value);
-            Tail = Tail.Next;
-
+        { // dont ask me why this works
+            if (Tail != null)
+            {
+                if (Head != null)
+                {
+                    getNodeBeforeNode(Tail).Next = new Node<T>(Tail.Value, new Node<T>(value)); // this makes tail a default node instead of a tail node
+                    Tail = new Node<T>(value);
+                }
+                else
+                {
+                    Head = new Node<T>(Tail.Value);
+                    Tail = new Node<T>(value);
+                    Head.Next = Tail;
+                }
+            }
+            else
+            {
+                Tail = new Node<T>(value);
+            }
             Count++;
         }
 
         public void AddBefore(Node<T> node, T value) // add a new node before any specified (and extant) node
-        { // IS THIS VALID CODEEE
+        {
+            if (node == Head) { AddFirst(value); return; }
+            if (node == Tail) { AddLast(value); return; }
+
             getNodeBeforeNode(node).Next = new Node<T>(value, node);
 
             Count++;
@@ -48,17 +66,33 @@ namespace DataStructures
 
         public void AddAfter(Node<T> node, T value)  // add a new node after any specified (and extant) node
         {
-            throw new NotImplementedException();
+            Node<T> beforeNode = getNodeBeforeNode(node);
+
+            if (beforeNode == Tail) { AddLast(value); return; }
+            if (beforeNode == Head) { Head.Next = new Node<T>(value, Head.Next); return; }
+
+            if (beforeNode == null) return;
+
+            beforeNode.Next.Next = new Node<T>(value, beforeNode.Next.Next);
         }
 
         public bool RemoveFirst() // remove the first node
         {
-            throw new NotImplementedException();
+            if (Head == null) return false;
+
+            Head = Head.Next;
+            Count--;
+            return true;
         }
 
         public bool RemoveLast() // remove the last node
         {
-            throw new NotImplementedException();
+            if (Tail == null) return false;
+
+            Tail = getNodeBeforeNode(Tail);
+            Tail.Next = null;
+            Count--;
+            return true;
         }
 
         public bool Remove(T value)// find and remove a node containing the given value
@@ -88,6 +122,8 @@ namespace DataStructures
 
         private Node<T> getNodeBeforeNode(Node<T> node)
         {
+            if (Head == null) return Tail;
+
             Node<T> currentNode = Head;
             for (int i = 0; i < Count; i++)
             {

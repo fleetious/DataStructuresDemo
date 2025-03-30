@@ -3,26 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace DataStructures
 {
-    public class Node<T> where T : IComparable<T>
+    public class DoublyLinkedNode<T> where T : IComparable<T>
     {
         public T Value;
-        public Node<T> Next;
+        public DoublyLinkedNode<T> Next;
+        public DoublyLinkedNode<T> Previous;
 
-        public Node(T value) { Value = value; }
-        public Node(T value, Node<T> next)
+        public DoublyLinkedNode(T value) { Value = value; }
+        public DoublyLinkedNode(T value, DoublyLinkedNode<T> next)
         {
             Value = value;
             Next = next;
         }
+        public DoublyLinkedNode(T value, DoublyLinkedNode<T> next, DoublyLinkedNode<T> previous)
+        {
+            Value = value;
+            Next = next;
+            Previous = previous;
+        }
     }
-    public class GenericLinkedList<T> where T : IComparable<T>
+    class DoublyLinkedList<T> where T : IComparable<T>
     {
         public Node<T> Head { get; private set; }
-        public Node<T> Tail { get; private set; }
         public int Count { get; private set; }
 
         public void AddFirst(T value) // add a new head at the beginning of the list
@@ -145,21 +150,6 @@ namespace DataStructures
             }
 
             return false;
-        }
-
-        private Node<T> getNodeBeforeNode(Node<T> node)
-        {
-            if (Head == null) return null;
-            if (node == Head) return null;
-
-            Node<T> currentNode = Head;
-            for (int i = 0; i < Count; i++)
-            {
-                if (currentNode.Next == node) return currentNode;
-                currentNode = currentNode.Next;
-            }
-
-            return null;
         }
     }
 }

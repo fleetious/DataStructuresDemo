@@ -12,12 +12,12 @@ namespace DataStructures
         public DoublyLinkedNode<T> Next;
         public DoublyLinkedNode<T> Previous;
 
-        public DoublyLinkedNode(T value) { Value = value; }
+        public DoublyLinkedNode(T value)
+            : this(value, null, null) { }
+
         public DoublyLinkedNode(T value, DoublyLinkedNode<T> next)
-        {
-            Value = value;
-            Next = next;
-        }
+            : this(value, next, null) { }
+
         public DoublyLinkedNode(T value, DoublyLinkedNode<T> next, DoublyLinkedNode<T> previous)
         {
             Value = value;
@@ -25,66 +25,66 @@ namespace DataStructures
             Previous = previous;
         }
     }
-    class DoublyLinkedList<T> where T : IComparable<T>
+    public class DoublyLinkedList<T> where T : IComparable<T>
     {
-        public Node<T> Head { get; private set; }
+        public DoublyLinkedNode<T> Head { get; private set; }
         public int Count { get; private set; }
 
-        public void AddFirst(T value) // add a new head at the beginning of the list
+        public DoublyLinkedNode<T> AddFirst(T value) // add a new head at the beginning of the list
         {
-            Head = new Node<T>(value, Head);
-
-            Count++;
-        }
-
-        public void AddLast(T value) // add a new tail at the end of the list
-        { // dont ask me why this works
-            if (Tail != null)
+            if (Head != null)
             {
-                if (Head != null)
-                {
-                    getNodeBeforeNode(Tail).Next = new Node<T>(Tail.Value, new Node<T>(value)); // this makes tail a default node instead of a tail node
-                    Tail = new Node<T>(value);
-                }
-                else
-                {
-                    Head = new Node<T>(Tail.Value);
-                    Tail = new Node<T>(value);
-                    Head.Next = Tail;
-                }
+                Head = new DoublyLinkedNode<T>(value, Head, Head.Previous);
             }
             else
             {
-                Tail = new Node<T>(value);
+                Head = new DoublyLinkedNode<T>(value);
+                Head.Next = Head;
+                Head.Previous = Head;
             }
-            Count++;
-        }
-
-        public void AddBefore(Node<T> node, T value) // add a new node before any specified (and extant) node
-        {
-            if (node == Head) { AddFirst(value); return; }
-            if (node == Tail) { AddLast(value); return; }
-
-            getNodeBeforeNode(node).Next = new Node<T>(value, node);
 
             Count++;
+
+            return Head;
         }
 
-        public void AddAfter(Node<T> node, T value)  // add a new node after any specified (and extant) node
+        public DoublyLinkedNode<T> AddBefore(DoublyLinkedNode<T> DoublyLinkedNode, T value) // add a new DoublyLinkedNode before any specified (and extant) DoublyLinkedNode
         {
-            Node<T> beforeNode = getNodeBeforeNode(node);
-
-            if (beforeNode == Head || beforeNode == null)
+            DoublyLinkedNode<T> nodeToAdd;
+            if (DoublyLinkedNode.Previous == null)
             {
-                Head.Next = new Node<T>(value, Head.Next);
-                return;
+                nodeToAdd = new DoublyLinkedNode<T>(value, Head, DoublyLinkedNode);
             }
-            if (beforeNode == Tail) { AddLast(value); return; }
+            else
+            {
+                nodeToAdd = new DoublyLinkedNode<T>(value, DoublyLinkedNode, DoublyLinkedNode.Previous);
+            }
+            Search(DoublyLinkedNode).Previous = nodeToAdd;
 
-            beforeNode.Next.Next = new Node<T>(value, beforeNode.Next.Next);
+            Count++;
+
+            return nodeToAdd;
         }
 
-        public bool RemoveFirst() // remove the first node
+        public DoublyLinkedNode<T> AddAfter(DoublyLinkedNode<T> DoublyLinkedNode, T value)  // add a new DoublyLinkedNode after any specified (and extant) DoublyLinkedNode
+        {
+            DoublyLinkedNode<T> nodeToAdd;
+            if (DoublyLinkedNode.Next == null)
+            {
+                nodeToAdd = new DoublyLinkedNode<T>(value, Head, DoublyLinkedNode);
+            }
+            else
+            {
+                nodeToAdd = new DoublyLinkedNode<T>(value, DoublyLinkedNode.Next, DoublyLinkedNode);
+            }
+            Search(DoublyLinkedNode).Next = nodeToAdd;
+
+            Count++;
+
+            return nodeToAdd;
+        }
+
+        public bool RemoveFirst() // remove the first DoublyLinkedNode
         {
             if (Head == null) return false;
 
@@ -93,44 +93,48 @@ namespace DataStructures
             return true;
         }
 
-        public bool RemoveLast() // remove the last node
+        public bool Remove(T value)// find and remove a DoublyLinkedNode containing the given value
         {
-            if (Tail == null) return false;
+            DoublyLinkedNode<T> node = Search(value);
 
-            Tail = getNodeBeforeNode(Tail);
-            Tail.Next = null;
+            if (node == null) return false;
+
+            if (node.Previous != null) node.Previous.Next = node.Next;
+            if (node.Next != null) node.Next.Previous = node.Previous;
             Count--;
-            return true;
-        }
-
-        public bool Remove(T value)// find and remove a node containing the given value
-        {
-            Node<T> node = Search(value);
-            Node<T> beforeNode = getNodeBeforeNode(node);
-
-            if (beforeNode == null) return false;
-
-            beforeNode.Next = node.Next;
 
             return true;
         }
 
-        public void Clear() // delete every node in the linked list
+        public void Clear() // delete every DoublyLinkedNode in the linked list
         {
             Head = null;
-            Tail = null;
             Count = 0;
         }
 
-        public Node<T> Search(T value) // search for a given value and return a node that contains it, return null if none is found
+        public DoublyLinkedNode<T> Search(T value) // search for a given value and return a DoublyLinkedNode that contains it, return null if none is found
         {
             if (Head == null) return null;
 
-            Node<T> currentNode = Head;
+            DoublyLinkedNode<T> currentDoublyLinkedNode = Head;
             for (int i = 0; i < Count; i++)
             {
-                if (currentNode.Value.CompareTo(value) == 0) return currentNode;
-                currentNode = currentNode.Next;
+                if (currentDoublyLinkedNode.Value.CompareTo(value) == 0) return currentDoublyLinkedNode;
+                currentDoublyLinkedNode = currentDoublyLinkedNode.Next;
+            }
+
+            return null;
+        }
+
+        public DoublyLinkedNode<T> Search(DoublyLinkedNode<T> node) // search for a given value and return a DoublyLinkedNode that contains it, return null if none is found
+        {
+            if (Head == null) return null;
+
+            DoublyLinkedNode<T> currentDoublyLinkedNode = Head;
+            for (int i = 0; i < Count; i++)
+            {
+                if (currentDoublyLinkedNode == node) return currentDoublyLinkedNode;
+                currentDoublyLinkedNode = currentDoublyLinkedNode.Next;
             }
 
             return null;
@@ -138,15 +142,15 @@ namespace DataStructures
 
         public bool Contains(T value) => Search(value) != null; // search for a given value and return if you found it.
 
-        public bool Contains(Node<T> node) // search for a given node and return if you found it.
+        public bool Contains(DoublyLinkedNode<T> DoublyLinkedNode) // search for a given DoublyLinkedNode and return if you found it.
         {
             if (Head == null) return false;
 
-            Node<T> currentNode = Head;
+            DoublyLinkedNode<T> currentDoublyLinkedNode = Head;
             for (int i = 0; i < Count; i++)
             {
-                if (currentNode == node) return true;
-                currentNode = currentNode.Next;
+                if (currentDoublyLinkedNode == DoublyLinkedNode) return true;
+                currentDoublyLinkedNode = currentDoublyLinkedNode.Next;
             }
 
             return false;

@@ -50,16 +50,11 @@ namespace DataStructures
 
         public DoublyLinkedNode<T> AddBefore(DoublyLinkedNode<T> DoublyLinkedNode, T value) // add a new DoublyLinkedNode before any specified (and extant) DoublyLinkedNode
         {
-            DoublyLinkedNode<T> nodeToAdd;
-            if (DoublyLinkedNode.Previous == null)
-            {
-                nodeToAdd = new DoublyLinkedNode<T>(value, Head, DoublyLinkedNode);
-            }
-            else
-            {
-                nodeToAdd = new DoublyLinkedNode<T>(value, DoublyLinkedNode, DoublyLinkedNode.Previous);
-            }
-            Search(DoublyLinkedNode).Previous = nodeToAdd;
+            if(Contains(DoublyLinkedNode)) return null;
+
+            DoublyLinkedNode<T> nodeToAdd = new DoublyLinkedNode<T>(value, DoublyLinkedNode, DoublyLinkedNode.Previous);
+            DoublyLinkedNode.Previous = nodeToAdd;
+            DoublyLinkedNode.Previous.Previous.Next = nodeToAdd;
 
             Count++;
 
@@ -68,16 +63,9 @@ namespace DataStructures
 
         public DoublyLinkedNode<T> AddAfter(DoublyLinkedNode<T> DoublyLinkedNode, T value)  // add a new DoublyLinkedNode after any specified (and extant) DoublyLinkedNode
         {
-            DoublyLinkedNode<T> nodeToAdd;
-            if (DoublyLinkedNode.Next == null)
-            {
-                nodeToAdd = new DoublyLinkedNode<T>(value, Head, DoublyLinkedNode);
-            }
-            else
-            {
-                nodeToAdd = new DoublyLinkedNode<T>(value, DoublyLinkedNode.Next, DoublyLinkedNode);
-            }
-            Search(DoublyLinkedNode).Next = nodeToAdd;
+            DoublyLinkedNode<T> nodeToAdd = new DoublyLinkedNode<T>(value, DoublyLinkedNode.Next, DoublyLinkedNode);
+            DoublyLinkedNode.Next.Previous = nodeToAdd;
+            DoublyLinkedNode.Next = nodeToAdd;
 
             Count++;
 

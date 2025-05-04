@@ -35,6 +35,8 @@ namespace DataStructures
             if (Head != null)
             {
                 Head = new DoublyLinkedNode<T>(value, Head, Head.Previous);
+                Head.Next.Previous = Head; // head.next and head.previous are references to the original head and tail, so we need to update them to point to the new head (i love autocomplete comments)
+                Head.Previous.Next = Head;
             }
             else
             {
@@ -50,11 +52,11 @@ namespace DataStructures
 
         public DoublyLinkedNode<T> AddBefore(DoublyLinkedNode<T> DoublyLinkedNode, T value) // add a new DoublyLinkedNode before any specified (and extant) DoublyLinkedNode
         {
-            if(Contains(DoublyLinkedNode)) return null;
-
             DoublyLinkedNode<T> nodeToAdd = new DoublyLinkedNode<T>(value, DoublyLinkedNode, DoublyLinkedNode.Previous);
+            DoublyLinkedNode.Previous.Next = nodeToAdd;
             DoublyLinkedNode.Previous = nodeToAdd;
-            DoublyLinkedNode.Previous.Previous.Next = nodeToAdd;
+
+            if(DoublyLinkedNode == Head) Head = nodeToAdd; // if the new node is the new head, update the head reference (autocomplete comment)
 
             Count++;
 

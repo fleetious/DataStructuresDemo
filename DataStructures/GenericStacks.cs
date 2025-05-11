@@ -13,14 +13,16 @@ namespace DataStructures
 
         public GenericLinkedListStack() => data = new GenericLinkedList<T>();
 
-        public void Push(T value) => data.AddFirst(value);
+        public void Push(T value) => data.AddLast(value);
         public T Pop()
         {
-            T value = data.Head.Value;
-            data.Remove(data.Head.Value);
+            T value = data.Tail.Value;
+
+            if(Count != 0) data.RemoveLast();
+
             return value;
         }
-        public T Peek() => data.Head.Value;
+        public T Peek() => data.Tail.Value;
         public void Clear() => data.Clear();
         public bool IsEmpty() => data.Count == 0;
     }

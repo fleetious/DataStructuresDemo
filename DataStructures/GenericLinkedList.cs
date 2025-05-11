@@ -27,7 +27,9 @@ namespace DataStructures
 
         public void AddFirst(T value) // add a new head at the beginning of the list
         {
-            Head = new Node<T>(value, Head);
+            Head = new Node<T>(value, Head != null ? Head : Tail);
+
+            if(Count == 0) { Tail = new Node<T>(value); }
 
             Count++;
         }
@@ -58,7 +60,6 @@ namespace DataStructures
         public void AddBefore(Node<T> node, T value) // add a new node before any specified (and extant) node
         {
             if (node == Head) { AddFirst(value); return; }
-            if (node == Tail) { AddLast(value); return; }
 
             getNodeBeforeNode(node).Next = new Node<T>(value, node);
 
@@ -67,16 +68,10 @@ namespace DataStructures
 
         public void AddAfter(Node<T> node, T value)  // add a new node after any specified (and extant) node
         {
-            Node<T> beforeNode = getNodeBeforeNode(node);
+            Node<T> nodeToAddTo = getNode(node);
+            if (nodeToAddTo == Tail) { AddLast(value); return; }
 
-            if (beforeNode == Head || beforeNode == null)
-            {
-                Head.Next = new Node<T>(value, Head.Next);
-                return;
-            }
-            if (beforeNode == Tail) { AddLast(value); return; }
-
-            beforeNode.Next.Next = new Node<T>(value, beforeNode.Next.Next);
+            getNode(node).Next = new Node<T>(value, nodeToAddTo.Next);
         }
 
         public bool RemoveFirst() // remove the first node
@@ -90,9 +85,15 @@ namespace DataStructures
 
         public bool RemoveLast() // remove the last node
         {
-            if (Tail == null) return false;
-
             Tail = getNodeBeforeNode(Tail);
+
+            if (Tail == null)
+            {
+                Head = Head.Next;
+                Count--;
+                return true;
+            }
+
             Tail.Next = null;
             Count--;
             return true;
@@ -103,9 +104,20 @@ namespace DataStructures
             Node<T> node = Search(value);
             Node<T> beforeNode = getNodeBeforeNode(node);
 
-            if (beforeNode == null) return false;
+            if (beforeNode == null)
+            {
+                if(node != Head) return false;
+
+                Count--;
+                Head = node.Next;
+                return true;
+            }
 
             beforeNode.Next = node.Next;
+
+            if(node == Tail) Tail = beforeNode;
+
+            Count--;
 
             return true;
         }
@@ -153,9 +165,25 @@ namespace DataStructures
             if (node == Head) return null;
 
             Node<T> currentNode = Head;
+            for (int i = 0; i < Count - 1; i++)
+            {
+                if (currentNode.Next.Value.Equals(node.Value)) return currentNode;
+                currentNode = currentNode.Next;
+            }
+
+            return null;
+        }
+
+        private Node<T> getNode(Node<T> node)
+        {
+            if (Head == null) return null;
+            if (node == Head) return Head;
+            if (node == Tail) return Tail;
+
+            Node<T> currentNode = Head;
             for (int i = 0; i < Count; i++)
             {
-                if (currentNode.Next == node) return currentNode;
+                if (currentNode.Next == node) return currentNode.Next;
                 currentNode = currentNode.Next;
             }
 

@@ -88,7 +88,7 @@ namespace DataStructures.Tests
         {
             GenericLinkedList<int> list = new();
 
-            for (int i = 0; i < toAdd.Length; i++) list.AddLast(toAdd[i]);
+            for (int i = 0; i < toAdd.Length; i++) list.AddFirst(toAdd[i]);
 
             for (int i = 0; i < toRemove.Length; i++) list.Remove(toRemove[i]);
 

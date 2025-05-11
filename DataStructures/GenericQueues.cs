@@ -16,7 +16,7 @@ namespace DataStructures
         public T Dequeue()
         {
             T value = data.Tail.Value;
-            data.Remove(data.Tail.Value);
+            data.RemoveLast();
             return value;
         }
         public T Peek() => data.Tail.Value;

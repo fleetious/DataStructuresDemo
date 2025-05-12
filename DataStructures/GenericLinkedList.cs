@@ -89,6 +89,8 @@ namespace DataStructures
 
             if (Tail == null)
             {
+                if(Head == null) return false;
+                
                 Head = Head.Next;
                 Count--;
                 return true;

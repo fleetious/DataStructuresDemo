@@ -18,12 +18,6 @@ public class ListTest
         return list;
     }
 
-    private int GetRandomNumber(int min, int max)
-    {
-        Console.WriteLine("Roll a dice and input the result: ");
-        return int.Parse(Console.ReadLine());
-    }
-
     [Fact]
     public void EmptyTest()
     {
@@ -99,7 +93,7 @@ public class ListTest
         }
     }
 
-    [Theory] // TODO: UNITTTTT TESTTTTT
+    [Theory]
     [InlineData(new int[] { 5, 6, 7, 8, 9, 6 }, new int[] { 5, 2 }, new int[] { 8, 5 }, new int[] { 5, 6, 5, 7, 8, 9, 8 })]
     [InlineData(new int[] { 6, 7, 8, 9, 6 }, new int[] { 0 }, new int[] { 5 }, new int[] { 5, 6, 7, 8, 9, 6 })]
     public void Insert(int[] nums, int[] indexesToInsert, int[] valuesToInsert, int[] resultArray)

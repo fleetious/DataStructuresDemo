@@ -18,7 +18,7 @@ namespace DataStructures.Tests
 
             for (int i = 0; i < toAdd.Length; i++) list.AddFirst(toAdd[i]);
 
-            Node<int> currentNode = list.Head;
+            LinkedListNode<int> currentNode = list.Head;
 
             for (int i = 0; i < expected.Length; i++)
             {
@@ -35,7 +35,7 @@ namespace DataStructures.Tests
 
             for (int i = 0; i < toAdd.Length; i++) list.AddLast(toAdd[i]);
 
-            Node<int> currentNode = list.Head;
+            LinkedListNode<int> currentNode = list.Head;
 
             for (int i = 0; i < expected.Length; i++)
             {
@@ -54,7 +54,7 @@ namespace DataStructures.Tests
 
             for (int i = 1; i < toAdd.Length; i++) list.AddBefore(list.Head, toAdd[i]);
 
-            Node<int> currentNode = list.Head;
+            LinkedListNode<int> currentNode = list.Head;
 
             for (int i = 0; i < expected.Length; i++)
             {
@@ -73,7 +73,7 @@ namespace DataStructures.Tests
 
             for (int i = 1; i < toAdd.Length; i++) list.AddAfter(list.Head, toAdd[i]);
 
-            Node<int> currentNode = list.Head;
+            LinkedListNode<int> currentNode = list.Head;
 
             for (int i = 0; i < expected.Length; i++)
             {
@@ -92,7 +92,7 @@ namespace DataStructures.Tests
 
             for (int i = 0; i < toRemove.Length; i++) list.Remove(toRemove[i]);
 
-            Node<int> currentNode = list.Head;
+            LinkedListNode<int> currentNode = list.Head;
 
             for (int i = 0; i < expected.Length; i++)
             {
@@ -109,7 +109,7 @@ namespace DataStructures.Tests
 
             for (int i = 0; i < toAdd.Length; i++) list.AddLast(toAdd[i]);
 
-            Node<int>[] nodes = new Node<int>[toSearch.Length];
+            LinkedListNode<int>[] nodes = new LinkedListNode<int>[toSearch.Length];
             for (int i = 0; i < toSearch.Length; i++) nodes[i] = list.Search(toSearch[i]);
 
             for (int i = 0; i < expected.Length; i++)

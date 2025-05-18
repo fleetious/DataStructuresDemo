@@ -27,30 +27,47 @@ namespace DataStructures
     public class GenericArrayQueue<T> where T : IComparable<T>
     {
         private T[] data;
-        private int count;
+        private int count = 0;
         public int Count { get { return count; } }
+
+        private int Head
+        {
+            set
+            {
+                Head = Head < count ? value : 0;
+            }
+            get
+            {
+                return Head;
+            }
+        }
+        private int Tail
+        {
+            set
+            {
+                Tail = Tail < count ? value : 0;
+            }
+            get
+            {
+                return Tail;
+            }
+        }
         public GenericArrayQueue(int size = 8) => data = new T[size];
 
         public void Enqueue(T value)
         {
-            PushForwardData();
-            data[count++] = value;
+            if(count == data.Length) Resize();
+
+            data[Tail++] = value;
+            count++;
         }
         public T Dequeue()
         {
-            T value = data[--count];
-            PullBackData();
-            return value;
-        }
+            if (count == 0) throw new InvalidOperationException("Queue is empty"); // auto complet code pls no buly
 
-        private void PushForwardData()
-        {
-            if(count == data.Length - 1) Resize();
-            for (int i = data.Length; i > 0; i--) data[i] = data[i - 1];
-        }
-        private void PullBackData()
-        {
-            for (int i = 0; i < data.Length - 1; i++) data[i] = data[i + 1];
+            T value = data[Head++];
+            count--;
+            return value;
         }
         private void Resize()
         {

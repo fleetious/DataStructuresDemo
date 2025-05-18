@@ -12,8 +12,8 @@ namespace DataStructures.Tests
     {
         private static bool IsValidDoubleCircularList(DoublyLinkedList<int> list, int[] expected)
         {
-            DoublyLinkedNode<int> previous = list.Head.Previous;
-            DoublyLinkedNode<int> current = list.Head;
+            DoublyLinkedListNode<int> previous = list.Head.Previous;
+            DoublyLinkedListNode<int> current = list.Head;
 
             Assert.True(list.Count == expected.Length);
 
@@ -64,7 +64,7 @@ namespace DataStructures.Tests
 
             for (int i = 0; i < toAdd.Length; i++) list.AddFirst(toAdd[i]);
 
-            DoublyLinkedNode<int> currentDoublyLinkedNode = list.Head;
+            DoublyLinkedListNode<int> currentDoublyLinkedNode = list.Head;
 
             Assert.True(IsValidDoubleCircularList(list, expected));
         }
@@ -80,7 +80,7 @@ namespace DataStructures.Tests
 
             for (int i = 1; i < toAdd.Length; i++) list.AddBefore(list.Head, toAdd[i]);
 
-            DoublyLinkedNode<int> currentDoublyLinkedNode = list.Head;
+            DoublyLinkedListNode<int> currentDoublyLinkedNode = list.Head;
 
             Assert.True(IsValidDoubleCircularList(list, expected));
         }
@@ -95,7 +95,7 @@ namespace DataStructures.Tests
 
             for (int i = 1; i < toAdd.Length; i++) list.AddAfter(list.Head, toAdd[i]);
 
-            DoublyLinkedNode<int> currentDoublyLinkedNode = list.Head;
+            DoublyLinkedListNode<int> currentDoublyLinkedNode = list.Head;
 
             Assert.True(IsValidDoubleCircularList(list, expected));
         }
@@ -106,12 +106,12 @@ namespace DataStructures.Tests
         {
             DoublyLinkedList<int> list = new();
 
-            DoublyLinkedNode<int> currentNode = list.AddFirst(toAdd[0]);
+            DoublyLinkedListNode<int> currentNode = list.AddFirst(toAdd[0]);
             for (int i = 1; i < toAdd.Length; i++) currentNode = list.AddAfter(currentNode, toAdd[i]);
 
             for (int i = 0; i < toRemove.Length; i++) list.Remove(toRemove[i]);
 
-            DoublyLinkedNode<int> currentDoublyLinkedNode = list.Head;
+            DoublyLinkedListNode<int> currentDoublyLinkedNode = list.Head;
 
             Assert.True(IsValidDoubleCircularList(list, expected));
         }
@@ -122,10 +122,10 @@ namespace DataStructures.Tests
         {
             DoublyLinkedList<int> list = new();
 
-            DoublyLinkedNode<int> currentDoublyLinkedNode = list.AddFirst(toAdd[0]);
+            DoublyLinkedListNode<int> currentDoublyLinkedNode = list.AddFirst(toAdd[0]);
             for (int i = 1; i < toAdd.Length; i++) currentDoublyLinkedNode = list.AddAfter(currentDoublyLinkedNode, toAdd[i]);
 
-            DoublyLinkedNode<int>[] nodes = new DoublyLinkedNode<int>[toSearch.Length];
+            DoublyLinkedListNode<int>[] nodes = new DoublyLinkedListNode<int>[toSearch.Length];
             for (int i = 0; i < toSearch.Length; i++) nodes[i] = list.Search(toSearch[i]);
 
             Assert.True(IsValidDoubleCircularList(list, toAdd));
@@ -141,7 +141,7 @@ namespace DataStructures.Tests
         {
             DoublyLinkedList<int> list = new();
 
-            DoublyLinkedNode<int> currentDoublyLinkedNode = list.AddFirst(toAdd[0]);
+            DoublyLinkedListNode<int> currentDoublyLinkedNode = list.AddFirst(toAdd[0]);
             for (int i = 1; i < toAdd.Length; i++) currentDoublyLinkedNode = list.AddAfter(currentDoublyLinkedNode, toAdd[i]);
 
             bool[] results = new bool[toSearch.Length];
@@ -160,7 +160,7 @@ namespace DataStructures.Tests
         {
             DoublyLinkedList<int> list = new();
 
-            DoublyLinkedNode<int> currentDoublyLinkedNode = list.AddFirst(toAdd[0]);
+            DoublyLinkedListNode<int> currentDoublyLinkedNode = list.AddFirst(toAdd[0]);
             for (int i = 1; i < toAdd.Length; i++) currentDoublyLinkedNode = list.AddAfter(currentDoublyLinkedNode, toAdd[i]);
 
             Assert.True(IsValidDoubleCircularList(list, toAdd));

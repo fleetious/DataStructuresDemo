@@ -15,7 +15,7 @@ public class GenericLinkedListTest
             list.AddLast(nums[i]);
         }
 
-        Node<int> currentNode = list.Head;
+        LinkedListNode<int> currentNode = list.Head;
         for (int i = 0; i < nums.Length; i++)
         {
             Assert.Equal(currentNode.Value, nums[i]);

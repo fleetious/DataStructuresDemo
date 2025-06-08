@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DataStructures
 {
-    public class Leaf<T> where T : IComparable<T> // rename after done making the tree
+    public class Leaf<T> // rename after done making the tree
     {
         public Leaf<T> Left;
         public Leaf<T> Right;
@@ -39,7 +39,95 @@ namespace DataStructures
             Depth = 1;
         }
 
-        public
+        public void Insert(T value)
+        {
+            Leaf<T> currentLeaf = Root;
+            int currentDepth = 1;
+            while(true)
+            {
+                int compareValue = currentLeaf.Value.CompareTo(value);
+
+                if (compareValue == 0) throw new Exception("bro u cant do this");
+
+                if(compareValue < 0)
+                {
+                    if(currentLeaf.Right == null)
+                    {
+                        currentLeaf.Right = new Leaf<T>(value);
+                        break;
+                    }
+
+                    currentLeaf = currentLeaf.Right;
+                }
+                else // at this point compareTo has evaluated to less than 0
+                {
+                    if(currentLeaf.Left == null)
+                    {
+                        currentLeaf.Left = new Leaf<T>(value);
+                        break;
+                    }
+
+                    currentLeaf = currentLeaf.Left;
+                }
+
+                currentDepth++;
+            }
+            // node has already been added here
+            if (currentDepth == Depth) Depth++;
+        }
+
+        public bool Remove(T value)
+        {
+            Leaf<T> currentLeaf = Root;
+            while (true)
+            {
+                int valueCompare = currentLeaf.Value.CompareTo(value);
+
+                if (currentLeaf.Right != null && currentLeaf.Right.Value.CompareTo(value) == 0)
+                {
+                    currentLeaf.Right = null;
+                    return true;
+                }
+                else if (currentLeaf.Left != null && currentLeaf.Left.Value.CompareTo(value) == 0)
+                {
+                    currentLeaf.Left = null;
+                    return true;
+                }
+                else if (valueCompare >= 0 && currentLeaf.Right != null)
+                    currentLeaf = currentLeaf.Right;
+                else if (valueCompare < 0 && currentLeaf.Left != null)
+                    currentLeaf = currentLeaf.Left;
+                else
+                    return false;
+            }
+        }
+
+        public bool Contains(T value)
+            => Search(value) != null;
+
+        public Leaf<T> Search(T value)
+        {
+            Leaf<T> currentLeaf = Root;
+            while (true)
+            {
+                int valueCompare = currentLeaf.Value.CompareTo(value);
+
+                if (currentLeaf.Right != null && currentLeaf.Right.Value.CompareTo(value) == 0)
+                {
+                    return currentLeaf.Right;
+                }
+                else if (currentLeaf.Left != null && currentLeaf.Left.Value.CompareTo(value) == 0)
+                {
+                    return currentLeaf.Left;
+                }
+                else if (valueCompare >= 0 && currentLeaf.Right != null)
+                    currentLeaf = currentLeaf.Right;
+                else if (valueCompare < 0 && currentLeaf.Left != null)
+                    currentLeaf = currentLeaf.Left;
+                else
+                    return null;
+            }
+        }
 
         private void Traverse(bool[] path) // not work.. as good the intend
         {
@@ -49,8 +137,6 @@ namespace DataStructures
             for (int i = 0; i < path.Length; i++)
                 currentNode = path[i] ? currentNode.Right : currentNode.Left;
                 //currentNode = (path = path & (path << (pathLength - i))) == 0 ? currentNode.Left : currentNode.Right;
-
-            return currentNode;
         }
     }
 }

@@ -129,14 +129,31 @@ namespace DataStructures
             }
         }
 
-        private void Traverse(bool[] path) // not work.. as good the intend
-        {
-            //int pathLength = (int)Math.Ceiling(Math.Log2(path));
-            Leaf<T> currentNode = Root;
-
-            for (int i = 0; i < path.Length; i++)
-                currentNode = path[i] ? currentNode.Right : currentNode.Left;
-                //currentNode = (path = path & (path << (pathLength - i))) == 0 ? currentNode.Left : currentNode.Right;
+        public List<T> Traverse()
+        { // TESTS NOT DONE YET
+            LinkedList<Leaf<T>> path = new();
+            HashSet<Leaf<T>> visited = new();
+            List<T> values = new();
+            path.AddLast(Root);
+            while(path.Count != 0)
+            {
+                visited.Add(path.First.Value);
+                if(path.First.Value.Left != null && !visited.Contains(path.First.Value.Left))
+                {
+                    path.AddFirst(path.First.Value.Left);
+                    continue;
+                }
+                if(path.First.Value.Right != null && !visited.Contains(path.First.Value.Right))
+                {
+                    path.AddFirst(path.First.Value.Right);
+                    continue;
+                }
+                // for future reference: path.First.Value is the leaf, not the value
+                values.Add(path.First.Value.Value);
+                path.RemoveFirst();
+            }
+            
+            return values;
         }
     }
 }

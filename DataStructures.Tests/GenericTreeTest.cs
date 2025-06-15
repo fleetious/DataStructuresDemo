@@ -59,4 +59,22 @@ public class GenericTreeTest
 
         Assert.True(IsValidTree(tree));
     }
+    
+    [Theory]
+    [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 })]
+    [InlineData(new int[] { 5 })]
+    public void Traverse(int[] valuesToInsert)
+    {
+        GenericTree<int> tree = new GenericTree<int>(valuesToInsert[0]);
+
+        for (int i = 1; i < valuesToInsert.Length; i++)
+        {
+            tree.Insert(valuesToInsert[i]);
+        }
+
+        List<int> values = tree.Traverse();
+        
+        for (int i = 1; i < values.Count; i++)
+            Assert.True(values[i - 1] < values[i]);
+    }
 }

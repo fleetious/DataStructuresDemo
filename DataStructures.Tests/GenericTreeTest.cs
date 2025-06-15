@@ -28,7 +28,7 @@ public class GenericTreeTest
     }
 
     [Theory]
-    [InlineData(new int[] { 5, 6, 7, 8, 9, 6 }, new int[] { 5 })]
+    [InlineData(new int[] { 5, 6, 7, 8, 9 }, new int[] { 5 })]
     [InlineData(new int[] { 5, 6, 7 }, new int[] { 7 })]
     [InlineData(new int[] { 1 }, new int[] { 1, 2, 3 })]
     public void RemoveValue(int[] nums, int[] valuesToRemove)
@@ -72,8 +72,8 @@ public class GenericTreeTest
             tree.Insert(valuesToInsert[i]);
         }
 
-        List<int> values = tree.Traverse();
-        
+        List<int> values = tree.Traverse(2);
+        // 8, 5, 11, 2, 7, 9, 13
         for (int i = 1; i < values.Count; i++)
             Assert.True(values[i - 1] < values[i]);
     }

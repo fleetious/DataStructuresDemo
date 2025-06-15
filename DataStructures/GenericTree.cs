@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
 // need to do (in order)
 // 1. insert
 // 2. remove
-// 3. traversal
+// 3. Traverse
 
 namespace DataStructures
 {
@@ -128,31 +129,96 @@ namespace DataStructures
                     return null;
             }
         }
+        // Method 1: in order
+        // Method 2: level order
+        // Method 3: pre order
+        // Method 4: post order
+        public List<T> Traverse(int traverse_method = 1)
+        {
+            switch(traverse_method)
+            {
+                case 1: return InOrderTraverse();
+                case 2: return LevelOrderTraverse();
+                case 3: return PreOrderTraverse();
+                case 4: return PostOrderTraverse();
+                default: throw new ArgumentOutOfRangeException("traverse_method");
+            }
+        }
 
-        public List<T> Traverse()
-        { // TESTS NOT DONE YET
-            LinkedList<Leaf<T>> path = new();
+        private List<T> InOrderTraverse()
+        {
+            if (Root == null) return new List<T>();
+
+            Stack<Leaf<T>> path = new();
             HashSet<Leaf<T>> visited = new();
             List<T> values = new();
-            path.AddLast(Root);
-            while(path.Count != 0)
+            path.Push(Root);
+            while (path.Count != 0)
             {
-                visited.Add(path.First.Value);
-                if(path.First.Value.Left != null && !visited.Contains(path.First.Value.Left))
+                if (path.Peek().Left != null && !visited.Contains(path.Peek().Left))
                 {
-                    path.AddFirst(path.First.Value.Left);
+                    path.Push(path.Peek().Left);
                     continue;
                 }
-                if(path.First.Value.Right != null && !visited.Contains(path.First.Value.Right))
+                if (path.Peek().Right != null && !visited.Contains(path.Peek().Right))
                 {
-                    path.AddFirst(path.First.Value.Right);
+                    values.Add(path.Peek().Value); // adds parent
+                    visited.Add(path.Peek());
+                    path.Push(path.Peek().Right);
                     continue;
                 }
-                // for future reference: path.First.Value is the leaf, not the value
-                values.Add(path.First.Value.Value);
-                path.RemoveFirst();
+
+                // for future reference: path.Peek() is the leaf, not the value
+                values.Add(path.Peek().Value);
+                visited.Add(path.Peek());
+
+                while (path.Count != 0 && visited.Contains(path.Peek()))
+                {
+                    path.Pop();
+                }
             }
-            
+
+            return values;
+        }
+
+        private List<T> LevelOrderTraverse()
+        {
+            if (Root == null) return new List<T>();
+
+            List<T> values = new();
+            Queue<Leaf<T>> visited = new();
+            Queue<Leaf<T>> toVisit = new();
+
+            toVisit.Enqueue(Root);
+
+            while(toVisit.Count > 0)
+            {
+                Leaf<T> currentlyVisiting = toVisit.Peek();
+                // handle visitor values
+                if(currentlyVisiting.Left != null)
+                    toVisit.Enqueue(currentlyVisiting.Left);
+                if(currentlyVisiting.Right != null)
+                    toVisit.Enqueue(currentlyVisiting.Right);
+                values.Add(currentlyVisiting.Value);
+
+                visited.Enqueue(toVisit.Dequeue());
+            }
+
+            return values;
+        }
+        private List<T> PreOrderTraverse()
+        {
+            if (Root == null) return new List<T>();
+
+            List<T> values = new();
+            return values;
+        }
+
+        private List<T> PostOrderTraverse()
+        {
+            if (Root == null) return new List<T>();
+
+            List<T> values = new();
             return values;
         }
     }

@@ -203,6 +203,7 @@ namespace DataStructures
 
             return values;
         }
+        
         private List<T> PreOrderTraverse()
         {
             if (Root == null) return new List<T>();
@@ -215,6 +216,7 @@ namespace DataStructures
             while(toVisit.Count > 0)
             {
                 Leaf<T> currentlyVisiting = toVisit.Peek();
+                values.Add(currentlyVisiting.Value);
                 // fix this dumb formatting plzz!!
                 if(currentlyVisiting.Left != null)
                 {
@@ -226,11 +228,7 @@ namespace DataStructures
 
                     if(currentlyVisiting.Right != null)
                         toVisit.Push(currentlyVisiting.Right);
-                    else
-                        break;
                 }
-                
-                values.Add(currentlyVisiting.Value);
             }
             
             return values;

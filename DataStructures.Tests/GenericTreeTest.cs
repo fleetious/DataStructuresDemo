@@ -115,6 +115,24 @@ public class GenericTreeTest
     }
     
     [Theory]
+    // bro you did NOT check the tests before committing...
+    // this traversal has TWO values in it...
+    // THAT is a MASSIVE (yk what else is massive-) oversight...
+    // YOU SHOULD ACTUALLY FIX THIS WHEN YOU HAVE CLASS NGL
+    // (and also look at this comment block that would def be nice)
+    // remember.. always check TESTS before COMMIT
+    // you would be pushing FAULTY code into production...
+    // ofc this is BAD practice and yk who doesnt like BAD practice?
+    // STAN!!! (plus every company who would ever want to hire you)
+    // THIS HIRING PROBABILITY BECOMES ZERO WHEN YOU MAKE SUPER BAD MISTAKE LIKE THIS
+    // remember crowdstrike?? someone got fired for that bro
+    // YOU do not want to be the one being fired!!
+    // so. my point stands to reason!!
+    // you should always run tests before committing!
+    // if u dont then you'll end up working on bad code that you dont know why it break
+    // u should prob end up rewriting the whole post order traversal function btw
+    // ok thats my ted talk to future dev guy or whatever
+    // gn chat
     [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 }, new int[] { 8, 5, 2, 7, 11, 9, 13 })]
     [InlineData(new int[] { 5 }, new int[] { 5 })]
     public void PostOrderTraverse(int[] valuesToInsert, int[] expectedValues)

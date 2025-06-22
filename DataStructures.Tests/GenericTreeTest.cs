@@ -63,7 +63,25 @@ public class GenericTreeTest
     [Theory]
     [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 })]
     [InlineData(new int[] { 5 })]
-    public void Traverse(int[] valuesToInsert)
+    public void InOrderTraverse(int[] valuesToInsert)
+    {
+        GenericTree<int> tree = new GenericTree<int>(valuesToInsert[0]);
+
+        for (int i = 1; i < valuesToInsert.Length; i++)
+        {
+            tree.Insert(valuesToInsert[i]);
+        }
+
+        List<int> values = tree.Traverse();
+        
+        for (int i = 1; i < values.Count; i++)
+            Assert.True(values[i - 1] < values[i]);
+    }
+    
+    [Theory]
+    [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 }, new int[] { 8, 5, 11, 2, 7, 9, 13 })]
+    [InlineData(new int[] { 5 }, new int[] { 5 })]
+    public void LevelOrderTraverse(int[] valuesToInsert, int[] expectedValues)
     {
         GenericTree<int> tree = new GenericTree<int>(valuesToInsert[0]);
 
@@ -73,8 +91,44 @@ public class GenericTreeTest
         }
 
         List<int> values = tree.Traverse(2);
-        // 8, 5, 11, 2, 7, 9, 13
-        for (int i = 1; i < values.Count; i++)
-            Assert.True(values[i - 1] < values[i]);
+        
+        for (int i = 0; i < values.Count; i++)
+            Assert.True(values[i] == expectedValues[i]);
+    }
+    
+    [Theory]
+    [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 }, new int[] { 8, 5, 2, 7, 11, 9, 13 })]
+    [InlineData(new int[] { 5 }, new int[] { 5 })]
+    public void PreOrderTraverse(int[] valuesToInsert, int[] expectedValues)
+    {
+        GenericTree<int> tree = new GenericTree<int>(valuesToInsert[0]);
+
+        for (int i = 1; i < valuesToInsert.Length; i++)
+        {
+            tree.Insert(valuesToInsert[i]);
+        }
+
+        List<int> values = tree.Traverse(3);
+        
+        for (int i = 0; i < values.Count; i++)
+            Assert.True(values[i] == expectedValues[i]);
+    }
+    
+    [Theory]
+    [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 }, new int[] { 8, 5, 2, 7, 11, 9, 13 })]
+    [InlineData(new int[] { 5 }, new int[] { 5 })]
+    public void PostOrderTraverse(int[] valuesToInsert, int[] expectedValues)
+    {
+        GenericTree<int> tree = new GenericTree<int>(valuesToInsert[0]);
+
+        for (int i = 1; i < valuesToInsert.Length; i++)
+        {
+            tree.Insert(valuesToInsert[i]);
+        }
+
+        List<int> values = tree.Traverse(4);
+        
+        for (int i = values.Count - 1; i >= 0; i--)
+            Assert.True(values[i] == expectedValues[i]);
     }
 }

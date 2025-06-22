@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DataStructures
 {
-    public class Leaf<T> // rename after done making the tree
+    public class Leaf<T> // rename to BinarySearchTreeLeaf or smth after making tree
     {
         public Leaf<T> Left;
         public Leaf<T> Right;
@@ -186,7 +186,6 @@ namespace DataStructures
             if (Root == null) return new List<T>();
 
             List<T> values = new();
-            Queue<Leaf<T>> visited = new();
             Queue<Leaf<T>> toVisit = new();
 
             toVisit.Enqueue(Root);
@@ -200,8 +199,6 @@ namespace DataStructures
                 if(currentlyVisiting.Right != null)
                     toVisit.Enqueue(currentlyVisiting.Right);
                 values.Add(currentlyVisiting.Value);
-
-                visited.Enqueue(toVisit.Dequeue());
             }
 
             return values;
@@ -209,16 +206,66 @@ namespace DataStructures
         private List<T> PreOrderTraverse()
         {
             if (Root == null) return new List<T>();
-
+            
             List<T> values = new();
+            Stack<Leaf<T>> toVisit = new();
+
+            toVisit.Push(Root);
+
+            while(toVisit.Count > 0)
+            {
+                Leaf<T> currentlyVisiting = toVisit.Peek();
+                // fix this dumb formatting plzz!!
+                if(currentlyVisiting.Left != null)
+                {
+                    toVisit.Push(currentlyVisiting.Left);
+                }
+                else
+                {
+                    toVisit.Pop();
+
+                    if(currentlyVisiting.Right != null)
+                        toVisit.Push(currentlyVisiting.Right);
+                    else
+                        break;
+                }
+                
+                values.Add(currentlyVisiting.Value);
+            }
+            
             return values;
         }
 
         private List<T> PostOrderTraverse()
         {
             if (Root == null) return new List<T>();
-
+            
             List<T> values = new();
+            Stack<Leaf<T>> toVisit = new();
+
+            toVisit.Push(Root);
+
+            while(toVisit.Count > 0)
+            {
+                Leaf<T> currentlyVisiting = toVisit.Peek();
+                // fix this dumb formatting plzz!!
+                if(currentlyVisiting.Right != null)
+                {
+                    toVisit.Push(currentlyVisiting.Right);
+                }
+                else
+                {
+                    toVisit.Pop();
+
+                    if(currentlyVisiting.Left != null)
+                        toVisit.Push(currentlyVisiting.Left);
+                    else
+                        break;
+                }
+                
+                values.Add(currentlyVisiting.Value);
+            }
+            
             return values;
         }
     }

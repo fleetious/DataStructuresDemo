@@ -80,18 +80,22 @@ namespace DataStructures
         public bool Remove(T value)
         {
             Leaf<T> currentLeaf = Root;
+
+            if (currentLeaf.Value.CompareTo(value) == 0)
+                currentLeaf = FindNewBranch(currentLeaf);
+
             while (true)
             {
                 int valueCompare = currentLeaf.Value.CompareTo(value);
 
                 if (currentLeaf.Right != null && currentLeaf.Right.Value.CompareTo(value) == 0)
                 {
-                    currentLeaf.Right = null;
+                    currentLeaf.Right.Value = FindNewBranch(currentLeaf.Right).Value;
                     return true;
                 }
                 else if (currentLeaf.Left != null && currentLeaf.Left.Value.CompareTo(value) == 0)
                 {
-                    currentLeaf.Left = null;
+                    currentLeaf.Left.Value = FindNewBranch(currentLeaf.Left).Value;
                     return true;
                 }
                 else if (valueCompare >= 0 && currentLeaf.Right != null)
@@ -101,6 +105,27 @@ namespace DataStructures
                 else
                     return false;
             }
+        }
+
+        private Leaf<T> FindNewBranch(Leaf<T> branch)
+        {
+            Leaf<T> currentLeaf = branch;
+            if(branch.Left != null)
+            {
+                while(currentLeaf.Right != null)
+                    currentLeaf = currentLeaf.Right;
+            }
+            else if (branch.Right != null)
+            {
+                while (currentLeaf.Left != null)
+                    currentLeaf = currentLeaf.Left;
+            }
+            else
+            {
+                return null;
+            }
+
+            return currentLeaf;
         }
 
         public bool Contains(T value)
@@ -186,19 +211,22 @@ namespace DataStructures
             if (Root == null) return new List<T>();
 
             List<T> values = new();
+            Queue<Leaf<T>> visited = new();
             Queue<Leaf<T>> toVisit = new();
 
             toVisit.Enqueue(Root);
 
-            while(toVisit.Count > 0)
+            while (toVisit.Count > 0)
             {
                 Leaf<T> currentlyVisiting = toVisit.Peek();
                 // handle visitor values
-                if(currentlyVisiting.Left != null)
+                if (currentlyVisiting.Left != null)
                     toVisit.Enqueue(currentlyVisiting.Left);
-                if(currentlyVisiting.Right != null)
+                if (currentlyVisiting.Right != null)
                     toVisit.Enqueue(currentlyVisiting.Right);
                 values.Add(currentlyVisiting.Value);
+
+                visited.Enqueue(toVisit.Dequeue());
             }
 
             return values;
@@ -212,22 +240,25 @@ namespace DataStructures
             Stack<Leaf<T>> toVisit = new();
 
             toVisit.Push(Root);
+            values.Add(Root.Value);
 
             while(toVisit.Count > 0)
             {
                 Leaf<T> currentlyVisiting = toVisit.Peek();
-                values.Add(currentlyVisiting.Value);
                 // fix this dumb formatting plzz!!
-                if(currentlyVisiting.Left != null)
+                if(currentlyVisiting.Left != null && !values.Contains(currentlyVisiting.Left.Value))
                 {
                     toVisit.Push(currentlyVisiting.Left);
+                    values.Add(currentlyVisiting.Left.Value);
+                }
+                else if(currentlyVisiting.Right != null && !values.Contains(currentlyVisiting.Right.Value))
+                {
+                    toVisit.Push(currentlyVisiting.Right);
+                    values.Add(currentlyVisiting.Right.Value);
                 }
                 else
                 {
                     toVisit.Pop();
-
-                    if(currentlyVisiting.Right != null)
-                        toVisit.Push(currentlyVisiting.Right);
                 }
             }
             
@@ -237,33 +268,33 @@ namespace DataStructures
         private List<T> PostOrderTraverse()
         {
             if (Root == null) return new List<T>();
-            
+
             List<T> values = new();
             Stack<Leaf<T>> toVisit = new();
 
             toVisit.Push(Root);
+            values.Add(Root.Value);
 
-            while(toVisit.Count > 0)
+            while (toVisit.Count > 0)
             {
                 Leaf<T> currentlyVisiting = toVisit.Peek();
                 // fix this dumb formatting plzz!!
-                if(currentlyVisiting.Right != null)
+                if (currentlyVisiting.Right != null && !values.Contains(currentlyVisiting.Right.Value))
                 {
                     toVisit.Push(currentlyVisiting.Right);
+                    values.Add(currentlyVisiting.Right.Value);
+                }
+                else if (currentlyVisiting.Left != null && !values.Contains(currentlyVisiting.Left.Value))
+                {
+                    toVisit.Push(currentlyVisiting.Left);
+                    values.Add(currentlyVisiting.Left.Value);
                 }
                 else
                 {
                     toVisit.Pop();
-
-                    if(currentlyVisiting.Left != null)
-                        toVisit.Push(currentlyVisiting.Left);
-                    else
-                        break;
                 }
-                
-                values.Add(currentlyVisiting.Value);
             }
-            
+
             return values;
         }
     }

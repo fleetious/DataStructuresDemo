@@ -12,6 +12,14 @@ using System.Threading.Tasks;
 
 namespace DataStructures
 {
+    public enum TreeTraversalMethod
+    {
+        InOrderTraversal,
+        LevelOrderTraversal,
+        PreOrderTraversal,
+        PostOrderTraversal
+    }
+
     public class Leaf<T> // rename to BinarySearchTreeLeaf or smth after making tree
     {
         public Leaf<T> Left;
@@ -81,8 +89,8 @@ namespace DataStructures
         {
             Leaf<T> currentLeaf = Root;
 
-            if (currentLeaf.Value.CompareTo(value) == 0)
-                currentLeaf = FindNewBranch(currentLeaf);
+            if (currentLeaf.Value.CompareTo(value) == 0 && Depth == 1)
+                throw new InvalidOperationException("cant make the tree epmty bro r u srs rn hy would u even want to do ts");
 
             while (true)
             {
@@ -90,12 +98,21 @@ namespace DataStructures
 
                 if (currentLeaf.Right != null && currentLeaf.Right.Value.CompareTo(value) == 0)
                 {
-                    currentLeaf.Right.Value = FindNewBranch(currentLeaf.Right).Value;
+                    while (HasChildren(currentLeaf.Right) && currentLeaf.Right != null)
+                    {
+                        currentLeaf = currentLeaf.Right;
+                        currentLeaf.Value = FindNewBranch(currentLeaf).Value;
+                    }
                     return true;
                 }
                 else if (currentLeaf.Left != null && currentLeaf.Left.Value.CompareTo(value) == 0)
                 {
-                    currentLeaf.Left.Value = FindNewBranch(currentLeaf.Left).Value;
+                    while(HasChildren(currentLeaf.Left) && currentLeaf.Left != null)
+                    {
+                        currentLeaf = currentLeaf.Left;
+                        currentLeaf.Value = FindNewBranch(currentLeaf).Value;
+                    }
+                    
                     return true;
                 }
                 else if (valueCompare >= 0 && currentLeaf.Right != null)
@@ -105,6 +122,11 @@ namespace DataStructures
                 else
                     return false;
             }
+        }
+
+        private bool HasChildren(Leaf<T> node)
+        {
+            return node.Left != null || node.Right != null;
         }
 
         private Leaf<T> FindNewBranch(Leaf<T> branch)
@@ -158,14 +180,14 @@ namespace DataStructures
         // Method 2: level order
         // Method 3: pre order
         // Method 4: post order
-        public List<T> Traverse(int traverse_method = 1)
+        public List<T> Traverse(TreeTraversalMethod traverse_method)
         {
             switch(traverse_method)
             {
-                case 1: return InOrderTraverse();
-                case 2: return LevelOrderTraverse();
-                case 3: return PreOrderTraverse();
-                case 4: return PostOrderTraverse();
+                case TreeTraversalMethod.InOrderTraversal: return InOrderTraverse();
+                case TreeTraversalMethod.LevelOrderTraversal: return LevelOrderTraverse();
+                case TreeTraversalMethod.PreOrderTraversal: return PreOrderTraverse();
+                case TreeTraversalMethod.PostOrderTraversal: return PostOrderTraverse();
                 default: throw new ArgumentOutOfRangeException("traverse_method");
             }
         }

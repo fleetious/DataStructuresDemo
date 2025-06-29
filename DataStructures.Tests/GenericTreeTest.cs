@@ -30,7 +30,6 @@ public class GenericTreeTest
     [Theory]
     [InlineData(new int[] { 5, 6, 7, 8, 9 }, new int[] { 5 })]
     [InlineData(new int[] { 5, 6, 7 }, new int[] { 7 })]
-    [InlineData(new int[] { 1 }, new int[] { 1, 2, 3 })]
     [InlineData(new int[] { 5, 3, 4, 2 }, new int[] { 3 })]
     public void RemoveValue(int[] nums, int[] valuesToRemove)
     {
@@ -44,6 +43,8 @@ public class GenericTreeTest
 
         for (int i = 0; i < valuesToRemove.Length; i++)
             Assert.True(!tree.Contains(valuesToRemove[i]));
+
+        Assert.True(IsValidTree(tree));
     }
 
     [Theory]
@@ -73,7 +74,7 @@ public class GenericTreeTest
             tree.Insert(valuesToInsert[i]);
         }
 
-        List<int> values = tree.Traverse();
+        List<int> values = tree.Traverse(TreeTraversalMethod.InOrderTraversal);
 
         for (int i = 1; i < values.Count; i++)
             Assert.True(values[i - 1] < values[i]);
@@ -91,7 +92,7 @@ public class GenericTreeTest
             tree.Insert(valuesToInsert[i]);
         }
 
-        List<int> values = tree.Traverse(2);
+        List<int> values = tree.Traverse(TreeTraversalMethod.LevelOrderTraversal);
 
         for (int i = 0; i < values.Count; i++)
             Assert.True(values[i] == expectedValues[i]);
@@ -109,7 +110,7 @@ public class GenericTreeTest
             tree.Insert(valuesToInsert[i]);
         }
 
-        List<int> values = tree.Traverse(3);
+        List<int> values = tree.Traverse(TreeTraversalMethod.PreOrderTraversal);
 
         for (int i = 0; i < values.Count; i++)
             Assert.True(values[i] == expectedValues[i]);
@@ -127,7 +128,7 @@ public class GenericTreeTest
             tree.Insert(valuesToInsert[i]);
         }
 
-        List<int> values = tree.Traverse(4);
+        List<int> values = tree.Traverse(TreeTraversalMethod.PostOrderTraversal);
 
         for (int i = 0; i < values.Count; i++)
             Assert.True(values[i] == expectedValues[i]);

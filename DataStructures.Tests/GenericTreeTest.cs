@@ -8,7 +8,7 @@ public class GenericTreeTest
 {
     private bool IsValidTree(GenericTree<int> tree)
     {
-        List<Leaf<int>> leaves = new();
+        List<BSTNode<int>> leaves = new();
         leaves.Add(tree.Root);
         for (int i = 0; i < tree.Depth; i++)
         {

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 
 // need to do (in order)
 // 1. insert
@@ -20,15 +21,15 @@ namespace DataStructures
         PostOrderTraversal
     }
 
-    public class Leaf<T> // rename to BinarySearchTreeLeaf or smth after making tree
+    public class BSTNode<T> // rename to BinarySearchTreeLeaf or smth after making tree
     {
-        public Leaf<T> Left;
-        public Leaf<T> Right;
+        public BSTNode<T> Left;
+        public BSTNode<T> Right;
 
         public T Value;
 
-        public Leaf(T value) : this(value, null, null) { }
-        public Leaf(T value, Leaf<T> left, Leaf<T> right)
+        public BSTNode(T value) : this(value, null, null) { }
+        public BSTNode(T value, BSTNode<T> left, BSTNode<T> right)
         {
             Value = value;
             Left = left;
@@ -38,19 +39,19 @@ namespace DataStructures
 
     public class GenericTree<T> where T : IComparable<T>
     {
-        public Leaf<T> Root { get; private set; }
+        public BSTNode<T> Root { get; private set; }
 
         public int Depth { get; private set; }
 
         public GenericTree(T value)
         {
-            Root = new Leaf<T>(value);
+            Root = new BSTNode<T>(value);
             Depth = 1;
         }
 
         public void Insert(T value)
         {
-            Leaf<T> currentLeaf = Root;
+            BSTNode<T> currentLeaf = Root;
             int currentDepth = 1;
             while(true)
             {
@@ -62,7 +63,7 @@ namespace DataStructures
                 {
                     if(currentLeaf.Right == null)
                     {
-                        currentLeaf.Right = new Leaf<T>(value);
+                        currentLeaf.Right = new BSTNode<T>(value);
                         break;
                     }
 
@@ -72,7 +73,7 @@ namespace DataStructures
                 {
                     if(currentLeaf.Left == null)
                     {
-                        currentLeaf.Left = new Leaf<T>(value);
+                        currentLeaf.Left = new BSTNode<T>(value);
                         break;
                     }
 
@@ -87,7 +88,7 @@ namespace DataStructures
 
         public bool Remove(T value)
         {
-            Leaf<T> currentLeaf = Root;
+            BSTNode<T> currentLeaf = Root;
 
             if (currentLeaf.Value.CompareTo(value) == 0 && Depth == 1)
                 throw new InvalidOperationException("cant make the tree epmty bro r u srs rn hy would u even want to do ts");
@@ -124,14 +125,14 @@ namespace DataStructures
             }
         }
 
-        private bool HasChildren(Leaf<T> node)
+        private bool HasChildren(BSTNode<T> node)
         {
             return node.Left != null || node.Right != null;
         }
 
-        private Leaf<T> FindNewBranch(Leaf<T> branch)
+        private BSTNode<T> FindNewBranch(BSTNode<T> branch)
         {
-            Leaf<T> currentLeaf = branch;
+            BSTNode<T> currentLeaf = branch;
             if(branch.Left != null)
             {
                 while(currentLeaf.Right != null)
@@ -153,9 +154,9 @@ namespace DataStructures
         public bool Contains(T value)
             => Search(value) != null;
 
-        public Leaf<T> Search(T value)
+        public BSTNode<T> Search(T value)
         {
-            Leaf<T> currentLeaf = Root;
+            BSTNode<T> currentLeaf = Root;
             while (true)
             {
                 int valueCompare = currentLeaf.Value.CompareTo(value);
@@ -186,7 +187,7 @@ namespace DataStructures
             {
                 case TreeTraversalMethod.InOrderTraversal: return InOrderTraverse();
                 case TreeTraversalMethod.LevelOrderTraversal: return LevelOrderTraverse();
-                case TreeTraversalMethod.PreOrderTraversal: return PreOrderTraverse();
+                case TreeTraversalMethod.PreOrderTraversal: return PreOrderRecursive();
                 case TreeTraversalMethod.PostOrderTraversal: return PostOrderTraverse();
                 default: throw new ArgumentOutOfRangeException("traverse_method");
             }
@@ -196,8 +197,8 @@ namespace DataStructures
         {
             if (Root == null) return new List<T>();
 
-            Stack<Leaf<T>> path = new();
-            HashSet<Leaf<T>> visited = new();
+            Stack<BSTNode<T>> path = new();
+            HashSet<BSTNode<T>> visited = new();
             List<T> values = new();
             path.Push(Root);
             while (path.Count != 0)
@@ -233,14 +234,14 @@ namespace DataStructures
             if (Root == null) return new List<T>();
 
             List<T> values = new();
-            Queue<Leaf<T>> visited = new();
-            Queue<Leaf<T>> toVisit = new();
+            Queue<BSTNode<T>> visited = new();
+            Queue<BSTNode<T>> toVisit = new();
 
             toVisit.Enqueue(Root);
 
             while (toVisit.Count > 0)
             {
-                Leaf<T> currentlyVisiting = toVisit.Peek();
+                BSTNode<T> currentlyVisiting = toVisit.Peek();
                 // handle visitor values
                 if (currentlyVisiting.Left != null)
                     toVisit.Enqueue(currentlyVisiting.Left);
@@ -259,21 +260,21 @@ namespace DataStructures
             if (Root == null) return new List<T>();
             
             List<T> values = new();
-            Stack<Leaf<T>> toVisit = new();
+            Stack<BSTNode<T>> toVisit = new();
 
             toVisit.Push(Root);
             values.Add(Root.Value);
 
             while(toVisit.Count > 0)
             {
-                Leaf<T> currentlyVisiting = toVisit.Peek();
+                BSTNode<T> currentlyVisiting = toVisit.Peek();
                 // fix this dumb formatting plzz!!
                 if(currentlyVisiting.Left != null && !values.Contains(currentlyVisiting.Left.Value))
                 {
                     toVisit.Push(currentlyVisiting.Left);
                     values.Add(currentlyVisiting.Left.Value);
                 }
-                else if(currentlyVisiting.Right != null && !values.Contains(currentlyVisiting.Right.Value))
+                if(currentlyVisiting.Right != null && !values.Contains(currentlyVisiting.Right.Value))
                 {
                     toVisit.Push(currentlyVisiting.Right);
                     values.Add(currentlyVisiting.Right.Value);
@@ -287,19 +288,41 @@ namespace DataStructures
             return values;
         }
 
+        public List<T> PreOrderRecursive() => PreOrderTraverseRecursion(Root);
+
+        private List<T> PreOrderTraverseRecursion(BSTNode<T> curr)
+        {
+            if (Root == null) return new List<T>();
+
+            List<T> values = [];
+
+            values.Add(curr.Value);
+
+            if (curr.Left != null)
+            {
+                values.AddRange(PreOrderTraverseRecursion(curr.Left));
+            }
+            if (curr.Right != null)
+            {
+                values.AddRange(PreOrderTraverseRecursion(curr.Right));
+            }
+
+            return values;
+        }
+
         private List<T> PostOrderTraverse()
         {
             if (Root == null) return new List<T>();
 
             List<T> values = new();
-            Stack<Leaf<T>> toVisit = new();
+            Stack<BSTNode<T>> toVisit = new();
 
             toVisit.Push(Root);
             values.Add(Root.Value);
 
             while (toVisit.Count > 0)
             {
-                Leaf<T> currentlyVisiting = toVisit.Peek();
+                BSTNode<T> currentlyVisiting = toVisit.Peek();
                 // fix this dumb formatting plzz!!
                 if (currentlyVisiting.Right != null && !values.Contains(currentlyVisiting.Right.Value))
                 {

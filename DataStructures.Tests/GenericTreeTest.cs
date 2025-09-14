@@ -56,8 +56,11 @@ public class GenericTreeTest
 
         for (int i = 1; i < valuesToInsert.Length; i++)
         {
-            tree.Insert(valuesToInsert[i]);
+            tree.RecursiveInsert(valuesToInsert[i]);
         }
+
+        for (int i = 0; i < valuesToInsert.Length; i++)
+            Assert.True(tree.Contains(valuesToInsert[i]));
 
         Assert.True(IsValidTree(tree));
     }

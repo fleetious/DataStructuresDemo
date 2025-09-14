@@ -49,6 +49,28 @@ namespace DataStructures
             Depth = 1;
         }
 
+        public void RecursiveInsert(T value)
+        {
+            RecursiveInsert(value, Root);
+        }
+        private void RecursiveInsert(T value, BSTNode<T> node)
+        {
+            if(node == null)
+            {
+                node = new BSTNode<T>(value);
+                return;
+            }
+
+            if(node.Value.CompareTo(value) < 0)
+            {
+                RecursiveInsert(value, node.Right);
+            }
+            else
+            {
+                RecursiveInsert(value, node.Left);
+            }
+        }
+
         public void Insert(T value)
         {
             BSTNode<T> currentLeaf = Root;

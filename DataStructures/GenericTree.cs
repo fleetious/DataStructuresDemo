@@ -49,41 +49,20 @@ namespace DataStructures
             Depth = 1;
         }
 
-        public void RecursiveInsert(T value)
-        {
-            RecursiveInsert(value, Root);
-        }
-        private void RecursiveInsert(T value, BSTNode<T> node)
-        {
-            if(node == null)
-            {
-                node = new BSTNode<T>(value);
-                return;
-            }
-
-            if(node.Value.CompareTo(value) < 0)
-            {
-                RecursiveInsert(value, node.Right);
-            }
-            else
-            {
-                RecursiveInsert(value, node.Left);
-            }
-        }
 
         public void Insert(T value)
         {
             BSTNode<T> currentLeaf = Root;
             int currentDepth = 1;
-            while(true)
+            while (true)
             {
                 int compareValue = currentLeaf.Value.CompareTo(value);
 
                 if (compareValue == 0) throw new Exception("bro u cant do this");
 
-                if(compareValue < 0)
+                if (compareValue < 0)
                 {
-                    if(currentLeaf.Right == null)
+                    if (currentLeaf.Right == null)
                     {
                         currentLeaf.Right = new BSTNode<T>(value);
                         break;
@@ -93,7 +72,7 @@ namespace DataStructures
                 }
                 else // at this point compareTo has evaluated to less than 0
                 {
-                    if(currentLeaf.Left == null)
+                    if (currentLeaf.Left == null)
                     {
                         currentLeaf.Left = new BSTNode<T>(value);
                         break;
@@ -175,10 +154,16 @@ namespace DataStructures
 
         public bool Contains(T value)
             => Search(value) != null;
-
+        // TODO: fix search bruo
         public BSTNode<T> Search(T value)
         {
             BSTNode<T> currentLeaf = Root;
+
+            if(currentLeaf.Value.CompareTo(value) == 0)
+            {
+                return Root;
+            }
+
             while (true)
             {
                 int valueCompare = currentLeaf.Value.CompareTo(value);
@@ -191,9 +176,9 @@ namespace DataStructures
                 {
                     return currentLeaf.Left;
                 }
-                else if (valueCompare >= 0 && currentLeaf.Right != null)
+                else if (valueCompare >= 0)
                     currentLeaf = currentLeaf.Right;
-                else if (valueCompare < 0 && currentLeaf.Left != null)
+                else if (valueCompare < 0)
                     currentLeaf = currentLeaf.Left;
                 else
                     return null;

@@ -56,7 +56,7 @@ public class GenericTreeTest
 
         for (int i = 1; i < valuesToInsert.Length; i++)
         {
-            tree.RecursiveInsert(valuesToInsert[i]);
+            tree.Insert(valuesToInsert[i]);
         }
 
         for (int i = 0; i < valuesToInsert.Length; i++)

@@ -66,22 +66,7 @@ namespace DataStructures
         // yoo what if we just use search to find the node and then in remove we handle the childrenn nuh uh
         public Node<T> Remove(T value)
         {
-            Node<T> node = RecursiveSearch(value, Root);
-            Node<T> parent = node; if (node == null) throw new InvalidOperationException("Value not found in tree"); // ily chatgpt
-
-            Node<T> leftChild = node.Left; Node<T> rightChild = node.Right;
-
-
-            node = null;
-            if (leftChild != null)
-                Insert(leftChild.Value); if (rightChild != null)
-            {
-                Insert(rightChild.Value);
-
-
-            }
-
-            return parent;
+            return RecursiveRemove(value, Root);
         }
 
         public bool Contains(T value) => Search(value) != null;
@@ -114,7 +99,7 @@ namespace DataStructures
 
             if (currentNode.Value.CompareTo(value) == 0)
             {
-                currentNode = Remove(currentNode);
+                currentNode = RemoveNode(currentNode);
                 return currentNode;
             }
             else if (currentNode.Value.CompareTo(value) < 0)
@@ -141,9 +126,20 @@ namespace DataStructures
             //    return RecursiveSearch(value, currentNode.Left);
             //}
         }
-        static Node<T> Remove(Node<T> node)
+        private static Node<T> RemoveNode(Node<T> node)
         {
-            
+            if (node == null) return null;
+
+            if(node.Right != null)
+            {
+                return node.Right;
+            }
+            else if (node.Left != null)
+            {
+                return node.Left;
+            }
+
+            return null;
         }
         // think of this similar to insert, go down tree and find the node ykyk
         private Node<T> RecursiveSearch(T value, Node<T> currentNode)
@@ -164,6 +160,32 @@ namespace DataStructures
         private T[] RecursiveTraversal(Node<T> node) // params are TBD
         {
             throw new NotImplementedException();
+        }
+
+        private T[] RecursivePreOrderTraverse(Node<T> cuwwentNwode)
+        {
+            List<T> values = new List<T>();
+
+            Node<T> helper(Node<T> curr)
+            {
+                if (curr == null)
+                {
+                    return null;
+                }
+
+                values.Add(curr.Value);
+
+                if (cuwwentNwode.Left != null && !values.Contains(cuwwentNwode.Left.Value))
+                {
+                    values.AddRange(RecursivePreOrderTraverse(cuwwentNwode.Left));
+                }
+                if (cuwwentNwode.Right != null && !values.Contains(cuwwentNwode.Right.Value))
+                {
+                    values.AddRange(RecursivePreOrderTraverse(cuwwentNwode.Right));
+                }
+            }
+
+            return values.ToArray();
         }
     }
 }

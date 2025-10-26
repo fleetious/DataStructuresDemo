@@ -35,7 +35,7 @@ namespace DataStructures
             public Node<T> Left;
             public Node<T> Right;
 
-            public int Height;
+            public int Height = 1;
             public int Balance;
 
             public T Value;
@@ -69,11 +69,16 @@ namespace DataStructures
             return RecursiveRemove(value, Root);
         }
 
+        public T[] Traverse()
+        {
+            return RecursiveTraversal(Root);
+        }
+
         public bool Contains(T value) => Search(value) != null;
 
         public Node<T> Search(T value) => RecursiveSearch(value, Root);
 
-        private static Node<T> RecursiveInsert(T value, Node<T> currentNode)
+        private Node<T> RecursiveInsert(T value, Node<T> currentNode)
         {
             if (currentNode == null)
             {
@@ -83,11 +88,15 @@ namespace DataStructures
             {
                 Node<T> temp = RecursiveInsert(value, currentNode.Right);
                 currentNode.Right = temp;
+
+                BubbleUpHeight(currentNode.Right);
             }
             else
             {
                 Node<T> temp = RecursiveInsert(value, currentNode.Left);
                 currentNode.Left = temp;
+
+                BubbleUpHeight(currentNode.Left);
             }
             //add rotations here
             return currentNode;
@@ -126,6 +135,60 @@ namespace DataStructures
             //    return RecursiveSearch(value, currentNode.Left);
             //}
         }
+
+        private void BubbleUpHeight(Node<T> startNode)
+        {
+            BubbleUpHeight(startNode, Root);
+        }
+
+        // essentially just copy pasted from search lmao
+        private static Node<T> BubbleUpHeight(Node<T> startNode, Node<T> currentNode) // startNode is the node we started from to bubble up, currentNode shouuld ALWAYS be Root at first call
+        {
+            if (currentNode == null) return null;
+
+            if (currentNode.Value.CompareTo(startNode.Value) == 0) return currentNode;
+            if (currentNode.Value.CompareTo(startNode.Value) < 0)
+            {
+                currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right) + 1;
+                // w chatgpt oneliner
+                currentNode.Balance = (currentNode.Left != null ? currentNode.Left.Height : 0) - (currentNode.Right != null ? currentNode.Right.Height : 0);
+
+                if(Math.Abs(currentNode.Balance) > 1)
+                {
+                    YoyoyoBalanceTheTreeAlreadyyy(currentNode);
+                }
+
+                return BubbleUpHeight(startNode, currentNode.Right);
+            }
+            else
+            {
+                currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right) + 1;
+                currentNode.Balance = (currentNode.Left != null ? currentNode.Left.Height : 0) - (currentNode.Right != null ? currentNode.Right.Height : 0);
+                return BubbleUpHeight(startNode, currentNode.Left);
+            }
+        }
+
+        private static void YoyoyoBalanceTheTreeAlreadyyy(Node<T> currentNode)
+        {
+            if(currentNode.Balance < 0)
+            {
+                
+            }    
+        }
+
+        private static Node<T> RightRotate(Node<T> unbalancedNode)
+        {
+            Node<T> newRoot = unbalancedNode.Left;
+            unbalancedNode.Left = newRoot.Right;
+        }
+
+        private static int GetMaxHeight(Node<T> left, Node<T> right)
+        {
+            if(left == null) return right.Height;
+            if(right == null) return left.Height;
+
+            return Math.Max(left.Height, right.Height);
+        }
         private static Node<T> RemoveNode(Node<T> node)
         {
             if (node == null) return null;
@@ -159,30 +222,27 @@ namespace DataStructures
         // tex said u dont have to do level order traversal so imma not do it !!
         private T[] RecursiveTraversal(Node<T> node) // params are TBD
         {
-            throw new NotImplementedException();
+            return RecursivePreOrderTraverse(node);
         }
 
-        private T[] RecursivePreOrderTraverse(Node<T> cuwwentNwode)
+        private T[] RecursivePreOrderTraverse(Node<T> currentNode)
         {
             List<T> values = new List<T>();
 
-            Node<T> helper(Node<T> curr)
+            if(currentNode == null)
             {
-                if (curr == null)
-                {
-                    return null;
-                }
+                return null;
+            }
 
-                values.Add(curr.Value);
+            values.Add(currentNode.Value);
 
-                if (cuwwentNwode.Left != null && !values.Contains(cuwwentNwode.Left.Value))
-                {
-                    values.AddRange(RecursivePreOrderTraverse(cuwwentNwode.Left));
-                }
-                if (cuwwentNwode.Right != null && !values.Contains(cuwwentNwode.Right.Value))
-                {
-                    values.AddRange(RecursivePreOrderTraverse(cuwwentNwode.Right));
-                }
+            if (currentNode.Left != null && !values.Contains(currentNode.Left.Value))
+            {
+                values.AddRange(RecursivePreOrderTraverse(currentNode.Left));
+            }
+            if (currentNode.Right != null && !values.Contains(currentNode.Right.Value))
+            {
+                values.AddRange(RecursivePreOrderTraverse(currentNode.Right));
             }
 
             return values.ToArray();

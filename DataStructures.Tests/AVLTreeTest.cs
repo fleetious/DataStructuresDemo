@@ -61,9 +61,9 @@ namespace DataStructures.Tests
                 tree.Insert(valuesToInsert[i]);
             }
 
-            List<int> values = tree.(TreeTraversalMethod.PreOrderTraversal);
+            int[] values = tree.Traverse();
 
-            for (int i = 0; i < values.Count; i++)
+            for (int i = 0; i < values.Length; i++)
                 Assert.True(values[i] == expectedValues[i]);
         }
     }

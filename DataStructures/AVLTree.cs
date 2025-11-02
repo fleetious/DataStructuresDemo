@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -155,7 +156,7 @@ namespace DataStructures
 
                 if(Math.Abs(currentNode.Balance) > 1)
                 {
-                    YoyoyoBalanceTheTreeAlreadyyy(currentNode);
+                    currentNode = RotateWrapper(currentNode);
                 }
 
                 return BubbleUpHeight(startNode, currentNode.Right);
@@ -164,26 +165,49 @@ namespace DataStructures
             {
                 currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right) + 1;
                 currentNode.Balance = (currentNode.Left != null ? currentNode.Left.Height : 0) - (currentNode.Right != null ? currentNode.Right.Height : 0);
+
+                if (Math.Abs(currentNode.Balance) > 1)
+                {
+                    currentNode = RotateWrapper(currentNode);
+                }
+
                 return BubbleUpHeight(startNode, currentNode.Left);
             }
         }
 
-        private static void YoyoyoBalanceTheTreeAlreadyyy(Node<T> currentNode)
+        private static Node<T> RotateWrapper(Node<T> currentNode)
         {
             if(currentNode.Balance < 0)
             {
-                
-            }    
+               return LeftRotate(currentNode);
+            }
+            else // already checked if tree is unbalanced earlier
+            {
+                return RightRotate(currentNode);
+            }
         }
 
         private static Node<T> RightRotate(Node<T> unbalancedNode)
         {
             Node<T> newRoot = unbalancedNode.Left;
             unbalancedNode.Left = newRoot.Right;
+            newRoot.Right = unbalancedNode;
+
+            return newRoot;
+        }
+
+        private static Node<T> LeftRotate(Node<T> unbalancedNode)
+        {
+            Node<T> newRoot = unbalancedNode.Right;
+            unbalancedNode.Right = newRoot.Left;
+            newRoot.Left = unbalancedNode;
+
+            return newRoot;
         }
 
         private static int GetMaxHeight(Node<T> left, Node<T> right)
         {
+            //if (left == null && right == null) return 1; bandaid fix
             if(left == null) return right.Height;
             if(right == null) return left.Height;
 

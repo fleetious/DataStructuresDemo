@@ -10,6 +10,7 @@ namespace DataStructures.Tests
     {
         [Theory]
         [InlineData(new int[] { 5, 7, 8, 4 })]
+        [InlineData(new int[] { 1, 3, 2, 4 })] // substitute for acbd in the example gif on the wiki
         public void Insert(int[] valuesToInsert)
         {
             AVLTree<int> tree = new AVLTree<int>();

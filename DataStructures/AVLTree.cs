@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,13 +32,13 @@ namespace DataStructures
 
     public class AVLTree<T> where T : IComparable<T>
     {
-        public class Node<T> // rename to BinarySearchTreeLeaf or smth after making tree
+        public class Node<T> // rename to AVLTreeLeaf or smth after making tree
         {
             public Node<T> Left;
             public Node<T> Right;
 
             public int Height = 1;
-            public int Balance;
+            public int Balance => GetBalance();
 
             public T Value;
 
@@ -47,6 +48,21 @@ namespace DataStructures
                 Value = value;
                 Left = left;
                 Right = right;
+            }
+            int GetBalance()
+            {
+                // btw so bad make ts into a one liner pretty
+                if(Left != null)
+                {
+                    if(Right != null)
+                    {
+                        return Left.Height - Right.Height;
+                    }
+
+                    return Left.Height;
+                }
+
+                return 0;
             }
         }
 
@@ -79,7 +95,7 @@ namespace DataStructures
 
         public Node<T> Search(T value) => RecursiveSearch(value, Root);
 
-        private Node<T> RecursiveInsert(T value, Node<T> currentNode)
+        private static Node<T> RecursiveInsert(T value, Node<T> currentNode)
         {
             if (currentNode == null)
             {
@@ -90,16 +106,17 @@ namespace DataStructures
                 Node<T> temp = RecursiveInsert(value, currentNode.Right);
                 currentNode.Right = temp;
 
-                BubbleUpHeight(currentNode.Right);
+                currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
             }
             else
             {
                 Node<T> temp = RecursiveInsert(value, currentNode.Left);
                 currentNode.Left = temp;
 
-                BubbleUpHeight(currentNode.Left);
+                currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
             }
             //add rotations here
+            Balance(currentNode);
             return currentNode;
         }
 
@@ -137,43 +154,62 @@ namespace DataStructures
             //}
         }
 
-        private void BubbleUpHeight(Node<T> startNode)
+        private static Node<T> Balance(Node<T> node)
         {
-            BubbleUpHeight(startNode, Root);
-        }
-
-        // essentially just copy pasted from search lmao
-        private static Node<T> BubbleUpHeight(Node<T> startNode, Node<T> currentNode) // startNode is the node we started from to bubble up, currentNode shouuld ALWAYS be Root at first call
-        {
-            if (currentNode == null) return null;
-
-            if (currentNode.Value.CompareTo(startNode.Value) == 0) return currentNode;
-            if (currentNode.Value.CompareTo(startNode.Value) < 0)
+            if(node.Balance > 1)
             {
-                currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right) + 1;
-                // w chatgpt oneliner
-                currentNode.Balance = (currentNode.Left != null ? currentNode.Left.Height : 0) - (currentNode.Right != null ? currentNode.Right.Height : 0);
-
-                if(Math.Abs(currentNode.Balance) > 1)
-                {
-                    currentNode = RotateWrapper(currentNode);
-                }
-
-                return BubbleUpHeight(startNode, currentNode.Right);
+                node = RightRotate(node);
             }
-            else
+            if(node.Balance < 1)
             {
-                currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right) + 1;
-                currentNode.Balance = (currentNode.Left != null ? currentNode.Left.Height : 0) - (currentNode.Right != null ? currentNode.Right.Height : 0);
-
-                if (Math.Abs(currentNode.Balance) > 1)
-                {
-                    currentNode = RotateWrapper(currentNode);
-                }
-
-                return BubbleUpHeight(startNode, currentNode.Left);
+                node = LeftRotate(node);
             }
+            // LOOk AT hOw good THIS looks
+            /*node = node.Balance > 1 ? LeftRotate(node) :
+                   node.Balance < 1 ? RightRotate(node) :
+                   node;*/
+
+            //if (node != null || node is ConfiguredCancelableAsyncEnumerable<double>) return null;
+            return node;
         }
+        //private void BubbleUpHeight(Node<T> startNode)
+        //{
+        //    BubbleUpHeight(startNode, Root);
+        //}
+
+        //// essentially just copy pasted from search lmao
+
+        //private static Node<T> BubbleUpHeight(Node<T> startNode, Node<T> currentNode) // startNode is the node we started from to bubble up, currentNode shouuld ALWAYS be Root at first call
+        //{
+        //    if (currentNode == null) return null;
+
+        //    if (currentNode.Value.CompareTo(startNode.Value) == 0) return currentNode;
+        //    if (currentNode.Value.CompareTo(startNode.Value) < 0)
+        //    {
+        //        currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right) + 1;
+        //        // w chatgpt oneliner
+        //        currentNode.Balance = (currentNode.Left != null ? currentNode.Left.Height : 0) - (currentNode.Right != null ? currentNode.Right.Height : 0);
+
+        //        if(Math.Abs(currentNode.Balance) > 1)
+        //        {
+        //            currentNode = RotateWrapper(currentNode);
+        //        }
+
+        //        return BubbleUpHeight(startNode, currentNode.Right);
+        //    }
+        //    else
+        //    {
+        //        currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right) + 1;
+        //        currentNode.Balance = (currentNode.Left != null ? currentNode.Left.Height : 0) - (currentNode.Right != null ? currentNode.Right.Height : 0);
+
+        //        if (Math.Abs(currentNode.Balance) > 1)
+        //        {
+        //            currentNode = RotateWrapper(currentNode);
+        //        }
+
+        //        return BubbleUpHeight(startNode, currentNode.Left);
+        //    }
+        //}
 
         private static Node<T> RotateWrapper(Node<T> currentNode)
         {
@@ -207,7 +243,7 @@ namespace DataStructures
 
         private static int GetMaxHeight(Node<T> left, Node<T> right)
         {
-            //if (left == null && right == null) return 1; bandaid fix
+            if (left == null && right == null) return 0; // yes.
             if(left == null) return right.Height;
             if(right == null) return left.Height;
 

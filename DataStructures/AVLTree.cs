@@ -116,7 +116,7 @@ namespace DataStructures
                 currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
             }
             //add rotations here
-            Balance(currentNode);
+            currentNode = Balance(currentNode);
             return currentNode;
         }
 
@@ -156,6 +156,8 @@ namespace DataStructures
 
         private static Node<T> Balance(Node<T> node)
         {
+            if (node.Balance == 0) return node;
+
             if(node.Balance > 1)
             {
                 node = RightRotate(node);

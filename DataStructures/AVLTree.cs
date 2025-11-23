@@ -62,6 +62,11 @@ namespace DataStructures
                     return Left.Height;
                 }
 
+                if(Right != null)
+                {
+                    return -Right.Height;
+                }
+
                 return 0;
             }
         }
@@ -91,12 +96,19 @@ namespace DataStructures
             return RecursiveTraversal(Root);
         }
 
-        public bool Contains(T value) => Search(value) != null;
+        public bool Contains(T value) => Contains(value, Root);
 
-        public Node<T> Search(T value) => RecursiveSearch(value, Root);
 
-        private static Node<T> RecursiveInsert(T value, Node<T> currentNode)
+        public Node<T> Search(T value) => Search(value, Root);
+
+        private static bool Contains(T value, Node<T> root) => Search(value, root) != null;
+
+        private static Node<T> Search(T value, Node<T> root) => RecursiveSearch(value, root);
+
+        private Node<T> RecursiveInsert(T value, Node<T> currentNode)
         {
+            if (Contains(value)) throw new ArgumentException("Duplicate value inserted into AVL tree not allow!!");
+
             if (currentNode == null)
             {
                 return new Node<T>(value);
@@ -160,10 +172,20 @@ namespace DataStructures
 
             if(node.Balance > 1)
             {
+                if(node.Left != null && node.Left.Right != null)
+                {
+                    node.Left = LeftRotate(node.Left);
+                }
+
                 node = RightRotate(node);
             }
             if(node.Balance < 1)
             {
+                if(node.Right != null && node.Right.Left != null)
+                {
+                    node.Right = RightRotate(node.Right);
+                }
+
                 node = LeftRotate(node);
             }
             // LOOk AT hOw good THIS looks
@@ -245,7 +267,7 @@ namespace DataStructures
 
         private static int GetMaxHeight(Node<T> left, Node<T> right)
         {
-            if (left == null && right == null) return 0; // yes.
+            if (left == null && right == null) return 1; // yes.
             if(left == null) return right.Height;
             if(right == null) return left.Height;
 
@@ -267,7 +289,7 @@ namespace DataStructures
             return null;
         }
         // think of this similar to insert, go down tree and find the node ykyk
-        private Node<T> RecursiveSearch(T value, Node<T> currentNode)
+        private static Node<T> RecursiveSearch(T value, Node<T> currentNode)
         {
             if (currentNode == null) return null;
 

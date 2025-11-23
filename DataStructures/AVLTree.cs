@@ -32,18 +32,18 @@ namespace DataStructures
 
     public class AVLTree<T> where T : IComparable<T>
     {
-        public class Node<T> // rename to AVLTreeLeaf or smth after making tree
+        public class AVLTreeLeaf<T> // rename to AVLTreeLeaf or smth after making tree
         {
-            public Node<T> Left;
-            public Node<T> Right;
+            public AVLTreeLeaf<T> Left;
+            public AVLTreeLeaf<T> Right;
 
             public int Height = 1;
             public int Balance => GetBalance();
 
             public T Value;
 
-            public Node(T value) : this(value, null, null) { }
-            public Node(T value, Node<T> left, Node<T> right)
+            public AVLTreeLeaf(T value) : this(value, null, null) { }
+            public AVLTreeLeaf(T value, AVLTreeLeaf<T> left, AVLTreeLeaf<T> right)
             {
                 Value = value;
                 Left = left;
@@ -71,11 +71,11 @@ namespace DataStructures
             }
         }
 
-        public Node<T> Root;
+        public AVLTreeLeaf<T> Root;
 
         public AVLTree() : this(null) { }
 
-        public AVLTree(Node<T> root)
+        public AVLTree(AVLTreeLeaf<T> root)
         {
             Root = root;
         }
@@ -86,7 +86,7 @@ namespace DataStructures
         }
 
         // yoo what if we just use search to find the node and then in remove we handle the childrenn nuh uh
-        public Node<T> Remove(T value)
+        public AVLTreeLeaf<T> Remove(T value)
         {
             return RecursiveRemove(value, Root);
         }
@@ -99,30 +99,30 @@ namespace DataStructures
         public bool Contains(T value) => Contains(value, Root);
 
 
-        public Node<T> Search(T value) => Search(value, Root);
+        public AVLTreeLeaf<T> Search(T value) => Search(value, Root);
 
-        private static bool Contains(T value, Node<T> root) => Search(value, root) != null;
+        private static bool Contains(T value, AVLTreeLeaf<T> root) => Search(value, root) != null;
 
-        private static Node<T> Search(T value, Node<T> root) => RecursiveSearch(value, root);
+        private static AVLTreeLeaf<T> Search(T value, AVLTreeLeaf<T> root) => RecursiveSearch(value, root);
 
-        private Node<T> RecursiveInsert(T value, Node<T> currentNode)
+        private AVLTreeLeaf<T> RecursiveInsert(T value, AVLTreeLeaf<T> currentNode)
         {
             if (Contains(value)) throw new ArgumentException("Duplicate value inserted into AVL tree not allow!!");
 
             if (currentNode == null)
             {
-                return new Node<T>(value);
+                return new AVLTreeLeaf<T>(value);
             }
             if (currentNode.Value.CompareTo(value) < 0)
             {
-                Node<T> temp = RecursiveInsert(value, currentNode.Right);
+                AVLTreeLeaf<T> temp = RecursiveInsert(value, currentNode.Right);
                 currentNode.Right = temp;
 
                 currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
             }
             else
             {
-                Node<T> temp = RecursiveInsert(value, currentNode.Left);
+                AVLTreeLeaf<T> temp = RecursiveInsert(value, currentNode.Left);
                 currentNode.Left = temp;
 
                 currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
@@ -132,7 +132,7 @@ namespace DataStructures
             return currentNode;
         }
 
-        private static Node<T> RecursiveRemove(T value, Node<T> currentNode)
+        private static AVLTreeLeaf<T> RecursiveRemove(T value, AVLTreeLeaf<T> currentNode)
         {
             if (currentNode == null) return null;
 
@@ -166,7 +166,7 @@ namespace DataStructures
             //}
         }
 
-        private static Node<T> Balance(Node<T> node)
+        private static AVLTreeLeaf<T> Balance(AVLTreeLeaf<T> node)
         {
             if (node.Balance == 0) return node;
 
@@ -235,7 +235,7 @@ namespace DataStructures
         //    }
         //}
 
-        private static Node<T> RotateWrapper(Node<T> currentNode)
+        private static AVLTreeLeaf<T> RotateWrapper(AVLTreeLeaf<T> currentNode)
         {
             if(currentNode.Balance < 0)
             {
@@ -247,25 +247,25 @@ namespace DataStructures
             }
         }
 
-        private static Node<T> RightRotate(Node<T> unbalancedNode)
+        private static AVLTreeLeaf<T> RightRotate(AVLTreeLeaf<T> unbalancedNode)
         {
-            Node<T> newRoot = unbalancedNode.Left;
+            AVLTreeLeaf<T> newRoot = unbalancedNode.Left;
             unbalancedNode.Left = newRoot.Right;
             newRoot.Right = unbalancedNode;
 
             return newRoot;
         }
 
-        private static Node<T> LeftRotate(Node<T> unbalancedNode)
+        private static AVLTreeLeaf<T> LeftRotate(AVLTreeLeaf<T> unbalancedNode)
         {
-            Node<T> newRoot = unbalancedNode.Right;
+            AVLTreeLeaf<T> newRoot = unbalancedNode.Right;
             unbalancedNode.Right = newRoot.Left;
             newRoot.Left = unbalancedNode;
 
             return newRoot;
         }
 
-        private static int GetMaxHeight(Node<T> left, Node<T> right)
+        private static int GetMaxHeight(AVLTreeLeaf<T> left, AVLTreeLeaf<T> right)
         {
             if (left == null && right == null) return 1; // yes.
             if(left == null) return right.Height;
@@ -273,7 +273,7 @@ namespace DataStructures
 
             return Math.Max(left.Height, right.Height);
         }
-        private static Node<T> RemoveNode(Node<T> node)
+        private static AVLTreeLeaf<T> RemoveNode(AVLTreeLeaf<T> node)
         {
             if (node == null) return null;
 
@@ -289,7 +289,7 @@ namespace DataStructures
             return null;
         }
         // think of this similar to insert, go down tree and find the node ykyk
-        private static Node<T> RecursiveSearch(T value, Node<T> currentNode)
+        private static AVLTreeLeaf<T> RecursiveSearch(T value, AVLTreeLeaf<T> currentNode)
         {
             if (currentNode == null) return null;
 
@@ -304,12 +304,12 @@ namespace DataStructures
             }
         }
         // tex said u dont have to do level order traversal so imma not do it !!
-        private T[] RecursiveTraversal(Node<T> node) // params are TBD
+        private T[] RecursiveTraversal(AVLTreeLeaf<T> node) // params are TBD
         {
             return RecursivePreOrderTraverse(node);
         }
 
-        private T[] RecursivePreOrderTraverse(Node<T> currentNode)
+        private T[] RecursivePreOrderTraverse(AVLTreeLeaf<T> currentNode)
         {
             List<T> values = new List<T>();
 

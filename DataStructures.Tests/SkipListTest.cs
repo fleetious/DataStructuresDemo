@@ -8,15 +8,11 @@ namespace DataStructures.Tests
 {
     public class SkipListTest
     {
-        // Helper to create a basic skip.Head node since your SkipList doesn't initialize it
-       
-
         [Fact]
         public void Insert_ShouldInsertNodeOnBaseLevel()
         {
             var skip = new SkipList<int>();  // Create an instance of SkipList
             
-
             skip.Insert(10);  // Use the instance to insert
 
             var inserted = skip.Search(10);  // Use the instance to search
@@ -28,14 +24,16 @@ namespace DataStructures.Tests
         [Fact]
         public void Insert_TwoValues_ShouldLinkInOrder()
         {
-            var skip = new SkipList<int>();  // Create an instance of SkipList
-            
+            for (int i = 0; i < 100; i++)
+            {
+                var skip = new SkipList<int>();  // Create an instance of SkipList
 
-             skip.Insert(5);  // Use the instance to insert
-             skip.Insert(10);  // Use the instance to insert
+                skip.Insert(5);  // Use the instance to insert
+                skip.Insert(10);  // Use the instance to insert
 
-            Assert.Equal(5, skip.Head.Next.Value);
-            Assert.Equal(10, skip.Head.Next.Next.Value);
+                Assert.Equal(5, skip.Head.Next.Value);
+                Assert.Equal(10, skip.Head.Next.Next.Value);
+            }
         }
 
         [Fact]
@@ -68,7 +66,7 @@ namespace DataStructures.Tests
             var skip = new SkipList<int>();  // Create an instance of SkipList
             skip.Insert(5);  // Use the instance to insert
 
-            Assert.Throws<Exception>(() => skip.Remove(99));  // Use the instance to remove
+            Assert.False(skip.Remove(99));  // Use the instance to remove
         }
     }
 }

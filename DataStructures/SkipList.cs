@@ -9,7 +9,6 @@ namespace DataStructures
 {
     public class SkipList<T> where T : IComparable<T> // im js gonna be honest skip lists are completely impossible to visualize in my head so imma just leave this untested for now and come back to it later when i have more brain power to figure it out
     {
-
         public class Node<T> where T : IComparable<T>
         {
             public T Value; // Value of the node
@@ -31,12 +30,17 @@ namespace DataStructures
         }
         public SkipList()
         {
-            Head = new Node<T>(default(T), 0);
+            Head = new Node<T>(default(T), 1);
         }
         public Node<T> Head { get; private set; }
 
         public void Insert(T value)
         {
+            if(Contains(value))
+            {
+                throw new Exception("Duplicate values are not allowed in SkipList.");
+            }
+
             //get height
             Random rand = new Random();
             int height = 1;
@@ -44,6 +48,7 @@ namespace DataStructures
             {
                 height++;
             }
+
             //increase head height if needed
             if (height > Head.Height)
             {
@@ -64,9 +69,13 @@ namespace DataStructures
             {
                 Node<T> temp = Insert(value, node.Down, height);
 
-                if (node.Height < height)
+                if(temp == null)
                 {
-                    return temp;
+                    height = 1;
+                }
+                else
+                {
+                    height = temp.Height + 1;
                 }
 
                 var newNode = new Node<T>(value, temp, height);
@@ -76,12 +85,23 @@ namespace DataStructures
             }
             else
             {
-                Node<T> temp = Insert(value, node.Next, height);
-                return temp;
+                return Insert(value, node.Next, height);
             }
 
 
             throw new Exception("Duplicate values are not allowed in SkipList."); // ty chatgpt for writing the error message :teary_eyed: :pray:
+        }
+
+        private Node<T> CreateNode(T value, int height, Node<T> prev, Node<T> next)
+        {
+            if (height == 0)
+            {
+                return null;
+            }
+            Node<T> node = new Node<T>(value, CreateNode(value, height - 1, prev.Down, next.Down), height);
+            prev.Next = node;
+            node.Next = next;
+            return node;
         }
 
         public bool Remove(T value)
@@ -90,7 +110,7 @@ namespace DataStructures
         }
         public static bool Remove(T value, Node<T> node) // praying this works :pray:
         {
-            if (node == null)
+            if (node == null || node.Next == null)
             {
                 return false;
             }
@@ -112,6 +132,11 @@ namespace DataStructures
             }
 
             throw new Exception("Could not find node to remove.");
+        }
+
+        public bool Contains(T value)
+        {
+            return Search(value) != null;
         }
 
         public Node<T> Search(T value)

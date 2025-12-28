@@ -22,6 +22,7 @@ namespace DataStructures
 
     public class Trie
     {
+        private TrieNode root;
         public void Clear() // Delete all data in the Trie
         {
             throw new NotImplementedException();
@@ -29,7 +30,17 @@ namespace DataStructures
 
         public void Insert(string word) // Add a word to the Trie
         {
-            throw new NotImplementedException();
+            Insert(word, 0, root);
+        }
+
+        private void Insert(string word, int index, TrieNode currentNode)
+        {
+            if (index >= word.Length) return;
+
+            currentNode.Children.TryAdd(word[index], new TrieNode(word[index]));
+            TrieNode newRoot;
+            currentNode.Children.TryGetValue(word[index], out newRoot); currentNode.Children[word[1]]
+            Insert(word, index + 1, newRoot);
         }
 
         private TrieNode SearchNode(string prefix) // Find the node at the end of this prefix. Use this function WHENEVER you need to find a node.

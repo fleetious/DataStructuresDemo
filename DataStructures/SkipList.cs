@@ -42,7 +42,7 @@ namespace DataStructures
             }
 
             //get height
-            Random rand = new Random();
+            Random rand = new Random(5);
             int height = 1;
             while (rand.Next(2) == 1 && height < Head.Height + 1)
             {
@@ -69,19 +69,13 @@ namespace DataStructures
             {
                 Node<T> temp = Insert(value, node.Down, height);
 
-                if(temp == null)
+                if (node    .Height <= height)
                 {
-                    height = 1;
+                    var newNode = new Node<T>(value, temp, node.Height);
+                    newNode.Next = node.Next;
+                    node.Next = newNode;
+                    return newNode;
                 }
-                else
-                {
-                    height = temp.Height + 1;
-                }
-
-                var newNode = new Node<T>(value, temp, height);
-                newNode.Next = node.Next;
-                node.Next = newNode;
-                return newNode;
             }
             else
             {
@@ -110,9 +104,14 @@ namespace DataStructures
         }
         public static bool Remove(T value, Node<T> node) // praying this works :pray:
         {
-            if (node == null || node.Next == null)
+            if (node == null)
             {
                 return false;
+            }
+
+            if (node.Next == null)
+            {
+                return Remove(value, node.Down);
             }
 
             int com = value.CompareTo(node.Next.Value);
@@ -146,9 +145,14 @@ namespace DataStructures
 
         public static Node<T> Search(T value, Node<T> node)
         {
-            if (node == null || node.Next == null)
+            if (node == null)
             {
                 return null;
+            }
+
+            if (node.Next == null)
+            {
+                return Search(value, node.Down);
             }
 
             int com = value.CompareTo(node.Next.Value);

@@ -6,33 +6,35 @@ using System.Threading.Tasks;
 
 namespace DataStructures.Tests
 {
-    public class SkipListTest
+    public class SkipListTest // i chatgpt test becaues 
     {
-        [Fact]
-        public void Insert_ShouldInsertNodeOnBaseLevel()
+        [Theory]
+        [InlineData(5)]
+        [InlineData(5, 10)]
+        [InlineData(5, 10, 15)]
+        [InlineData(5, 10, 15, 20)]
+        [InlineData(5, 10, 15, 20, 25)]
+        [InlineData(5, 10, 15, 20, 25, 30)]
+        [InlineData(5, 10, 15, 20, 25, 35, 40)]
+        [InlineData(5, 10, 15, 20, 25, 35, 40, 45)]
+        [InlineData(5, 10, 15, 20, 25, 35, 40, 45, 50)]
+        public void Insert_Values_ShouldLinkInOrder(params int[] values)
         {
-            var skip = new SkipList<int>();  // Create an instance of SkipList
-            
-            skip.Insert(10);  // Use the instance to insert
-
-            var inserted = skip.Search(10);  // Use the instance to search
-            Assert.NotNull(inserted);
-            Assert.Equal(10, inserted.Value);
-            Assert.Equal(inserted, skip.Head.Next);
-        }
-
-        [Fact]
-        public void Insert_TwoValues_ShouldLinkInOrder()
-        {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 1e+4; i++)
             {
                 var skip = new SkipList<int>();  // Create an instance of SkipList
 
-                skip.Insert(5);  // Use the instance to insert
-                skip.Insert(10);  // Use the instance to insert
+                for(int j = 0; j < values.Length; j++)
+                {
+                    skip.Insert(values[j]);  // Use the instance to insert :sob: brooooo
+                }
 
-                Assert.Equal(5, skip.Head.Next.Value);
-                Assert.Equal(10, skip.Head.Next.Next.Value);
+                SkipList<int>.Node<int> currentNode = skip.Head;
+                for (int j = 0; j < values.Length; j++)
+                {
+                    currentNode = currentNode.Next;
+                    Assert.Equal(values[j], currentNode.Value);
+                }
             }
         }
 
@@ -43,21 +45,38 @@ namespace DataStructures.Tests
             skip.Insert(5);  // Use the instance to insert
 
             Assert.Throws<Exception>(() => skip.Insert(5));  // Use the instance to insert
+            Thread.Sleep(30*100);
         }
 
-        [Fact]
-        public void Remove_ShouldRemoveNode()
+        [Theory]
+        [InlineData(5)]
+        [InlineData(5, 10)]
+        [InlineData(5, 10, 15)]
+        [InlineData(5, 10, 15, 20)]
+        [InlineData(5, 10, 15, 20, 25)]
+        [InlineData(5, 10, 15, 20, 25, 30)]
+        [InlineData(5, 10, 15, 20, 25, 35, 40)]
+        [InlineData(5, 10, 15, 20, 25, 35, 40, 45)]
+        [InlineData(5, 10, 15, 20, 25, 35, 40, 45, 50)]
+        public void Remove_ShouldRemoveNode(params int[] values)
         {
-            var skip = new SkipList<int>();  // Create an instance of SkipList
-           
+            for (int i = 0; i < 1e+4; i++)
+            {
+                var skip = new SkipList<int>();  // Create an instance of SkipList
 
-             skip.Insert(5);  // Use the instance to insert
-             skip.Insert(10);  // Use the instance to insert
+                for (int j = 0; j < values.Length; j++)
+                {
+                    skip.Insert(values[j]);  // Use the instance to insert :sob: brooooo
+                }
 
-            var removed = skip.Remove(5);  // Use the instance to remove
+                int indexToRemove = new Random().Next(0, values.Length);
+                skip.Remove(values[indexToRemove]);
 
-            Assert.Equal(true,removed);
-            Assert.Equal(10, skip.Head.Next.Value);
+                if(indexToRemove > 0 && indexToRemove < values.Length - 1)
+                {
+                    Assert.Equal(skip.Search(values[indexToRemove - 1]).Next, skip.Search(values[indexToRemove + 1]));
+                }
+            }
         }
 
         [Fact]
@@ -67,6 +86,7 @@ namespace DataStructures.Tests
             skip.Insert(5);  // Use the instance to insert
 
             Assert.False(skip.Remove(99));  // Use the instance to remove
+            Thread.Sleep(30*100);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace DataStructures.Tests
                     skip.Insert(values[j]);  // Use the instance to insert :sob: brooooo
                 }
 
-                SkipList<int>.Node<int> currentNode = skip.Head;
+                SkipListNode<int> currentNode = skip.Head;
                 for (int j = 0; j < values.Length; j++)
                 {
                     currentNode = currentNode.Next;

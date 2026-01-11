@@ -98,7 +98,6 @@ namespace DataStructures
 
         public bool Contains(T value) => Contains(value, Root);
 
-
         public AVLTreeLeaf<T> Search(T value) => Search(value, Root);
 
         private static bool Contains(T value, AVLTreeLeaf<T> root) => Search(value, root) != null;
@@ -132,7 +131,7 @@ namespace DataStructures
             return currentNode;
         }
 
-        private static AVLTreeLeaf<T> RecursiveRemove(T value, AVLTreeLeaf<T> currentNode)
+        private AVLTreeLeaf<T> RecursiveRemove(T value, AVLTreeLeaf<T> currentNode)
         {
             if (currentNode == null) return null;
 
@@ -273,13 +272,14 @@ namespace DataStructures
 
             return Math.Max(left.Height, right.Height);
         }
-        private static AVLTreeLeaf<T> RemoveNode(AVLTreeLeaf<T> node)
+        private AVLTreeLeaf<T> RemoveNode(AVLTreeLeaf<T> node)
         {
             if (node == null) return null;
 
             if(node.Right != null)
             {
-                return node.Right;
+                node.Value = node.Right.Value;
+
             }
             else if (node.Left != null)
             {

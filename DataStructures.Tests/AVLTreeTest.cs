@@ -58,7 +58,7 @@ namespace DataStructures.Tests
         }
 
         [Theory]
-        [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 }, new int[] { 8, 5, 2, 7, 11, 9, 13 })]
+        [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 }, new int[] { 7, 5, 2, 11, 8, 9, 13 })]
         [InlineData(new int[] { 5 }, new int[] { 5 })]
         public void PreOrderTraverse(int[] valuesToInsert, int[] expectedValues)
         {

@@ -45,7 +45,6 @@ namespace DataStructures.Tests
             skip.Insert(5);  // Use the instance to insert
 
             Assert.Throws<Exception>(() => skip.Insert(5));  // Use the instance to insert
-            Thread.Sleep(30*100);
         }
 
         [Theory]
@@ -86,7 +85,6 @@ namespace DataStructures.Tests
             skip.Insert(5);  // Use the instance to insert
 
             Assert.False(skip.Remove(99));  // Use the instance to remove
-            Thread.Sleep(30*100);
         }
     }
 }

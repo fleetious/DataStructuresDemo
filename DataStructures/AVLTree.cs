@@ -56,15 +56,15 @@ namespace DataStructures
                 {
                     if(Right != null)
                     {
-                        return Left.Height - Right.Height;
+                        return Right.Height - Left.Height;
                     }
 
-                    return Left.Height;
+                    return -Left.Height;
                 }
 
                 if(Right != null)
                 {
-                    return -Right.Height;
+                    return Right.Height;
                 }
 
                 return 0;
@@ -169,23 +169,23 @@ namespace DataStructures
         {
             if (node.Balance == 0) return node;
 
-            if(node.Balance > 1)
+            if (node.Balance > 1)
             {
                 if(node.Left != null && node.Left.Right != null)
-                {
-                    node.Left = LeftRotate(node.Left);
-                }
-
-                node = RightRotate(node);
-            }
-            if(node.Balance < 1)
-            {
-                if(node.Right != null && node.Right.Left != null)
                 {
                     node.Right = RightRotate(node.Right);
                 }
 
                 node = LeftRotate(node);
+            }
+            if(node.Balance < -1)
+            {
+                if(node.Right != null && node.Right.Left != null)
+                {
+                    node.Left = LeftRotate(node.Left);
+                }
+
+                node = RightRotate(node);
             }
             // LOOk AT hOw good THIS looks
             /*node = node.Balance > 1 ? LeftRotate(node) :
@@ -247,10 +247,11 @@ namespace DataStructures
         }
 
         private static AVLTreeLeaf<T> RightRotate(AVLTreeLeaf<T> unbalancedNode)
-        {
+        { // SHOULD work
             AVLTreeLeaf<T> newRoot = unbalancedNode.Left;
-            unbalancedNode.Left = newRoot.Right;
+            AVLTreeLeaf<T> temp = newRoot.Right;
             newRoot.Right = unbalancedNode;
+            newRoot.Right.Left = temp;
 
             return newRoot;
         }
@@ -258,7 +259,7 @@ namespace DataStructures
         private static AVLTreeLeaf<T> LeftRotate(AVLTreeLeaf<T> unbalancedNode)
         {
             AVLTreeLeaf<T> newRoot = unbalancedNode.Right;
-            unbalancedNode.Right = newRoot.Left;
+            newRoot.Right = unbalancedNode.Right.Left;
             newRoot.Left = unbalancedNode;
 
             return newRoot;
@@ -267,10 +268,10 @@ namespace DataStructures
         private static int GetMaxHeight(AVLTreeLeaf<T> left, AVLTreeLeaf<T> right)
         {
             if (left == null && right == null) return 1; // yes.
-            if(left == null) return right.Height;
-            if(right == null) return left.Height;
+            if(left == null) return right.Height + 1;
+            if(right == null) return left.Height + 1;
 
-            return Math.Max(left.Height, right.Height);
+            return Math.Max(left.Height, right.Height) + 1;
         }
         private AVLTreeLeaf<T> RemoveNode(AVLTreeLeaf<T> node)
         {

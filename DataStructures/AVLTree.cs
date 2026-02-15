@@ -30,47 +30,47 @@ namespace DataStructures
     //    }
     //}
 
+    public class AVLTreeLeaf<T> // rename to AVLTreeLeaf or smth after making tree
+    {
+        public AVLTreeLeaf<T> Left;
+        public AVLTreeLeaf<T> Right;
+
+        public int Height = 1;
+        public int Balance => GetBalance();
+
+        public T Value;
+
+        public AVLTreeLeaf(T value) : this(value, null, null) { }
+        public AVLTreeLeaf(T value, AVLTreeLeaf<T> left, AVLTreeLeaf<T> right)
+        {
+            Value = value;
+            Left = left;
+            Right = right;
+        }
+        int GetBalance()
+        {
+            // btw so bad make ts into a one liner pretty
+            if (Left != null)
+            {
+                if (Right != null)
+                {
+                    return Right.Height - Left.Height;
+                }
+
+                return -Left.Height;
+            }
+
+            if (Right != null)
+            {
+                return Right.Height;
+            }
+
+            return 0;
+        }
+    }
+
     public class AVLTree<T> where T : IComparable<T>
     {
-        public class AVLTreeLeaf<T> // rename to AVLTreeLeaf or smth after making tree
-        {
-            public AVLTreeLeaf<T> Left;
-            public AVLTreeLeaf<T> Right;
-
-            public int Height = 1;
-            public int Balance => GetBalance();
-
-            public T Value;
-
-            public AVLTreeLeaf(T value) : this(value, null, null) { }
-            public AVLTreeLeaf(T value, AVLTreeLeaf<T> left, AVLTreeLeaf<T> right)
-            {
-                Value = value;
-                Left = left;
-                Right = right;
-            }
-            int GetBalance()
-            {
-                // btw so bad make ts into a one liner pretty
-                if(Left != null)
-                {
-                    if(Right != null)
-                    {
-                        return Right.Height - Left.Height;
-                    }
-
-                    return -Left.Height;
-                }
-
-                if(Right != null)
-                {
-                    return Right.Height;
-                }
-
-                return 0;
-            }
-        }
-
         public AVLTreeLeaf<T> Root;
 
         public AVLTree() : this(null) { }
@@ -112,6 +112,7 @@ namespace DataStructures
             {
                 return new AVLTreeLeaf<T>(value);
             }
+
             if (currentNode.Value.CompareTo(value) < 0)
             {
                 AVLTreeLeaf<T> temp = RecursiveInsert(value, currentNode.Right);
@@ -250,8 +251,10 @@ namespace DataStructures
         { // SHOULD work
             AVLTreeLeaf<T> newRoot = unbalancedNode.Left;
             AVLTreeLeaf<T> temp = newRoot.Right;
+            newRoot.Height = GetMaxHeight(newRoot.Left, newRoot.Right);
             newRoot.Right = unbalancedNode;
             newRoot.Right.Left = temp;
+            newRoot.Right.Height = GetMaxHeight(newRoot.Right.Left, newRoot.Right.Right);
 
             return newRoot;
         }
@@ -259,8 +262,11 @@ namespace DataStructures
         private static AVLTreeLeaf<T> LeftRotate(AVLTreeLeaf<T> unbalancedNode)
         {
             AVLTreeLeaf<T> newRoot = unbalancedNode.Right;
-            newRoot.Right = unbalancedNode.Right.Left;
+            AVLTreeLeaf<T> temp = newRoot.Left;
+            newRoot.Height = GetMaxHeight(newRoot.Left, newRoot.Right);
             newRoot.Left = unbalancedNode;
+            newRoot.Left.Right = temp;
+            newRoot.Left.Height = GetMaxHeight(newRoot.Left.Left, newRoot.Left.Right);
 
             return newRoot;
         }

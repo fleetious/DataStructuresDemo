@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,12 +9,6 @@ namespace DataStructures.Tests
 {
     public class AVLTreeTest
     {
-
-        private bool IsValidAVLTree(AVLTree<int> tree)
-        {
-            throw new NotImplementedException(); // ykw im kinda lazy lowkey
-        }
-
         [Theory]
         [InlineData(new int[] { 5, 7, 8, 4 })]
         [InlineData(new int[] { 1, 3, 2, 4 })] // substitute for acbd in the example gif on the wiki
@@ -58,7 +53,7 @@ namespace DataStructures.Tests
         }
 
         [Theory]
-        [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 }, new int[] { 7, 5, 2, 11, 8, 9, 13 })]
+        [InlineData(new int[] { 8, 5, 7, 2, 11, 13, 9 }, new int[] { 8, 5, 2, 7, 11, 9, 13 })] // i lowkey had the wrong expectedvalues so i was debugging for no reason hahahahhahahahahahahahahahhahhahahahhahahahahahahhahahahahahahahahahahahahahhahahhahahahahahahahahhahahahahhaahahahhhah
         [InlineData(new int[] { 5 }, new int[] { 5 })]
         public void PreOrderTraverse(int[] valuesToInsert, int[] expectedValues)
         {

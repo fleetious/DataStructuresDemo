@@ -117,17 +117,14 @@ namespace DataStructures
             {
                 AVLTreeLeaf<T> temp = RecursiveInsert(value, currentNode.Right);
                 currentNode.Right = temp;
-
-                currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
             }
             else
             {
                 AVLTreeLeaf<T> temp = RecursiveInsert(value, currentNode.Left);
                 currentNode.Left = temp;
-
-                currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
             }
-            //add rotations here
+
+            currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
             currentNode = Balance(currentNode);
             return currentNode;
         }
@@ -149,6 +146,9 @@ namespace DataStructures
             {
                 currentNode.Left = RecursiveRemove(value, currentNode.Left);
             }
+
+            currentNode.Height = GetMaxHeight(currentNode.Left, currentNode.Right);
+            currentNode = Balance(currentNode);
 
             return currentNode;
 

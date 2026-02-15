@@ -13,8 +13,8 @@ namespace DataStructures.Tests
         {
             Graph<int> graph = new Graph<int>();
 
-            graph.AddVertex(new Vertex<int>(5));
-            Assert.True(graph.AddVertex(new Vertex<int>(8)));
+            graph.AddVertex(new UndirectedGraphVertex<int>(5));
+            Assert.True(graph.AddVertex(new UndirectedGraphVertex<int>(8)));
             Assert.True(graph.Search(5) != null);
             Assert.True(graph.Search(8) != null);
         }
@@ -24,8 +24,8 @@ namespace DataStructures.Tests
         {
             Graph<int> graph = new Graph<int>();
 
-            graph.AddVertex(new Vertex<int>(5));
-            Assert.False(graph.AddVertex(new Vertex<int>(5)));
+            graph.AddVertex(new UndirectedGraphVertex<int>(5));
+            Assert.False(graph.AddVertex(new UndirectedGraphVertex<int>(5)));
             Assert.True(graph.Search(5) != null);
         }
 
@@ -38,7 +38,7 @@ namespace DataStructures.Tests
 
             for (int i = 0; i < v.Length; i++)
             {
-                graph.AddVertex(new Vertex<int>(v[i]));
+                graph.AddVertex(new UndirectedGraphVertex<int>(v[i]));
             }
 
             Assert.True(graph.RemoveVertex(graph.Search(toRemove)) == expected);
@@ -64,7 +64,7 @@ namespace DataStructures.Tests
 
             for (int i = 0; i < v.Length; i++)
             {
-                graph.AddVertex(new Vertex<int>(v[i]));
+                graph.AddVertex(new UndirectedGraphVertex<int>(v[i]));
                 graph.AddEdge(graph.Vertices[0], graph.Vertices[i]);
             }
 
@@ -77,7 +77,7 @@ namespace DataStructures.Tests
                     Assert.True(graph.Search(v[i]) == null);
                     continue;
                 }
-                Vertex<int> ver = graph.Search(v[i]);
+                UndirectedGraphVertex<int> ver = graph.Search(v[i]);
                 Assert.True(ver != null);
                 
                 for(int j = 0; j < ver.Edges.Count; j++)
@@ -92,8 +92,8 @@ namespace DataStructures.Tests
         {
             Graph<int> graph = new Graph<int>();
 
-            graph.AddVertex(new Vertex<int>(5));
-            graph.AddVertex(new Vertex<int>(8));
+            graph.AddVertex(new UndirectedGraphVertex<int>(5));
+            graph.AddVertex(new UndirectedGraphVertex<int>(8));
 
             graph.AddEdge(graph.Vertices[0], graph.Vertices[1]);
 
@@ -108,12 +108,12 @@ namespace DataStructures.Tests
         {
             Graph<int> graph = new Graph<int>();
 
-            graph.AddVertex(new Vertex<int>(5));
-            graph.AddVertex(new Vertex<int>(8));
+            graph.AddVertex(new UndirectedGraphVertex<int>(5));
+            graph.AddVertex(new UndirectedGraphVertex<int>(8));
 
             graph.AddEdge(graph.Vertices[0], graph.Vertices[1]);
 
-            Assert.False(graph.RemoveEdge(graph.Vertices[0], new Vertex<int>(8)));
+            Assert.False(graph.RemoveEdge(graph.Vertices[0], new UndirectedGraphVertex<int>(8)));
 
             Assert.True(graph.Vertices[0].Edges[0] == graph.Vertices[1]);
             Assert.True(graph.Vertices[1].Edges[0] == graph.Vertices[0]);
@@ -124,8 +124,8 @@ namespace DataStructures.Tests
         {
             Graph<int> graph = new Graph<int>();
 
-            graph.AddVertex(new Vertex<int>(5));
-            graph.AddVertex(new Vertex<int>(8));
+            graph.AddVertex(new UndirectedGraphVertex<int>(5));
+            graph.AddVertex(new UndirectedGraphVertex<int>(8));
 
             Assert.True(graph.AddEdge(graph.Vertices[0], graph.Vertices[1]));
 
@@ -138,9 +138,9 @@ namespace DataStructures.Tests
         {
             Graph<int> graph = new Graph<int>();
 
-            graph.AddVertex(new Vertex<int>(5));
+            graph.AddVertex(new UndirectedGraphVertex<int>(5));
 
-            Assert.False(graph.AddEdge(graph.Vertices[0], new Vertex<int>(8)));
+            Assert.False(graph.AddEdge(graph.Vertices[0], new UndirectedGraphVertex<int>(8)));
 
             Assert.True(graph.Vertices[0].Edges.Count == 0);
         }

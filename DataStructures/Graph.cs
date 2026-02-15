@@ -6,25 +6,25 @@ using System.Threading.Tasks;
 
 namespace DataStructures
 {
-    public class Vertex<T> where T : IComparable<T>
+    public class UndirectedGraphVertex<T> where T : IComparable<T>
     {
         public T Value { get; set; }
-        public List<Vertex<T>> Edges;
+        public List<UndirectedGraphVertex<T>> Edges;
 
-        public Vertex(T value)
+        public UndirectedGraphVertex(T value)
         {
             Value = value;
-            Edges = new List<Vertex<T>>();
+            Edges = new List<UndirectedGraphVertex<T>>();
         }
     }
 
     public class Graph<T> where T : IComparable<T>
     {
-        public List<Vertex<T>> Vertices { get; private set; }
+        public List<UndirectedGraphVertex<T>> Vertices { get; private set; }
 
         public Graph()
         {
-            Vertices = new List<Vertex<T>>();
+            Vertices = new List<UndirectedGraphVertex<T>>();
         }
 
         /*
@@ -57,7 +57,7 @@ namespace DataStructures
             //   vertex doesn't exist in the graph.
         */
 
-        public bool AddVertex(Vertex<T> vertex)
+        public bool AddVertex(UndirectedGraphVertex<T> vertex)
         {
             if(Search(vertex.Value) != null)
             {
@@ -68,7 +68,7 @@ namespace DataStructures
             return true;
         }
 
-        public bool RemoveVertex(Vertex<T> vertex)
+        public bool RemoveVertex(UndirectedGraphVertex<T> vertex)
         {
             if(vertex == null)
             {
@@ -83,7 +83,7 @@ namespace DataStructures
             return Vertices.Remove(vertex);
         }
         
-        public bool AddEdge(Vertex<T> a, Vertex<T> b)
+        public bool AddEdge(UndirectedGraphVertex<T> a, UndirectedGraphVertex<T> b)
         {
             if(a == null || b == null)
             {
@@ -101,7 +101,7 @@ namespace DataStructures
             return true;
         }
 
-        public bool RemoveEdge(Vertex<T> a, Vertex<T> b)
+        public bool RemoveEdge(UndirectedGraphVertex<T> a, UndirectedGraphVertex<T> b)
         {
             if (a == null || b == null)
             {
@@ -124,7 +124,7 @@ namespace DataStructures
             return true;
         }
 
-        public Vertex<T> Search(T value)
+        public UndirectedGraphVertex<T> Search(T value)
         {
             if (value == null)
             {

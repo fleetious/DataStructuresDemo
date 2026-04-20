@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataStructures
 {
-    public class GenericLinkedListStack<T> where T : IComparable<T>
+    public class GenericLinkedListStack<T> : IStack<T> where T : IComparable<T>
     {
         private GenericLinkedList<T> data;
         public int Count { get { return data.Count; } }
@@ -27,7 +27,7 @@ namespace DataStructures
         public bool IsEmpty() => data.Count == 0;
     }
 
-    public class GenericArrayStack<T> where T : IComparable<T>
+    public class GenericArrayStack<T> : IStack<T> where T : IComparable<T>
     {
         private T[] data;
         private int count;
@@ -65,5 +65,12 @@ namespace DataStructures
 
         public void Clear() => count = 0;
         public bool IsEmpty() => count == 0;
+    }
+    
+    public interface IStack<T>
+    {
+        void Push(T value);
+        T Pop();
+        T Peek();
     }
 }

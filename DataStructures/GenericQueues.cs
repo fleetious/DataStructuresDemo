@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DataStructures
 {
-    public class GenericLinkedListQueue<T> where T : IComparable<T>
+    public class GenericLinkedListQueue<T> : IQueue<T> where T : IComparable<T>
     {
         private GenericLinkedList<T> data;
         public int Count { get { return data.Count; } }
@@ -24,7 +24,7 @@ namespace DataStructures
         public bool IsEmpty() => data.Count == 0;
     }
 
-    public class GenericArrayQueue<T> where T : IComparable<T>
+    public class GenericArrayQueue<T> : IQueue<T> where T : IComparable<T>
     {
         private T[] data;
         private int count = 0;
@@ -83,5 +83,12 @@ namespace DataStructures
             count = 0;
         }
         public bool IsEmpty() => count == 0;
+    }
+    
+    public interface IQueue<T>
+    {
+        void Enqueue(T value);
+        T Dequeue();
+        T Peek();
     }
 }

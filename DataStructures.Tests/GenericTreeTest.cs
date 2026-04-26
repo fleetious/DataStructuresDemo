@@ -114,7 +114,7 @@ public class GenericTreeTest
         }
 
         List<int> values = tree.Traverse(TreeTraversalMethod.PreOrderTraversal);
-
+        
         for (int i = 0; i < values.Count; i++)
             Assert.True(values[i] == expectedValues[i]);
     }

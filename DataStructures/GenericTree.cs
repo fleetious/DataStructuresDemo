@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -37,7 +38,7 @@ namespace DataStructures
         }
     }
 
-    public class GenericTree<T> where T : IComparable<T>
+    public class GenericTree<T> : IEnumerable<T> where T : IComparable<T>
     {
         public BSTNode<T> Root { get; private set; }
 
@@ -109,12 +110,12 @@ namespace DataStructures
                 }
                 else if (currentLeaf.Left != null && currentLeaf.Left.Value.CompareTo(value) == 0)
                 {
-                    while(HasChildren(currentLeaf.Left) && currentLeaf.Left != null)
+                    while (HasChildren(currentLeaf.Left) && currentLeaf.Left != null)
                     {
                         currentLeaf = currentLeaf.Left;
                         currentLeaf.Value = FindNewBranch(currentLeaf).Value;
                     }
-                    
+
                     return true;
                 }
                 else if (valueCompare >= 0 && currentLeaf.Right != null)
@@ -134,9 +135,9 @@ namespace DataStructures
         private BSTNode<T> FindNewBranch(BSTNode<T> branch)
         {
             BSTNode<T> currentLeaf = branch;
-            if(branch.Left != null)
+            if (branch.Left != null)
             {
-                while(currentLeaf.Right != null)
+                while (currentLeaf.Right != null)
                     currentLeaf = currentLeaf.Right;
             }
             else if (branch.Right != null)
@@ -159,7 +160,7 @@ namespace DataStructures
         {
             BSTNode<T> currentLeaf = Root;
 
-            if(currentLeaf.Value.CompareTo(value) == 0)
+            if (currentLeaf.Value.CompareTo(value) == 0)
             {
                 return Root;
             }
@@ -190,7 +191,7 @@ namespace DataStructures
         // Method 4: post order
         public List<T> Traverse(TreeTraversalMethod traverse_method)
         {
-            switch(traverse_method)
+            switch (traverse_method)
             {
                 case TreeTraversalMethod.InOrderTraversal: return InOrderTraverse();
                 case TreeTraversalMethod.LevelOrderTraversal: return LevelOrderTraverse();
@@ -261,27 +262,27 @@ namespace DataStructures
 
             return values;
         }
-        
+
         private List<T> PreOrderTraverse()
         {
             if (Root == null) return new List<T>();
-            
+
             List<T> values = new();
             Stack<BSTNode<T>> toVisit = new();
 
             toVisit.Push(Root);
             values.Add(Root.Value);
 
-            while(toVisit.Count > 0)
+            while (toVisit.Count > 0)
             {
                 BSTNode<T> currentlyVisiting = toVisit.Peek();
                 // fix this dumb formatting plzz!!
-                if(currentlyVisiting.Left != null && !values.Contains(currentlyVisiting.Left.Value))
+                if (currentlyVisiting.Left != null && !values.Contains(currentlyVisiting.Left.Value))
                 {
                     toVisit.Push(currentlyVisiting.Left);
                     values.Add(currentlyVisiting.Left.Value);
                 }
-                if(currentlyVisiting.Right != null && !values.Contains(currentlyVisiting.Right.Value))
+                if (currentlyVisiting.Right != null && !values.Contains(currentlyVisiting.Right.Value))
                 {
                     toVisit.Push(currentlyVisiting.Right);
                     values.Add(currentlyVisiting.Right.Value);
@@ -291,7 +292,7 @@ namespace DataStructures
                     toVisit.Pop();
                 }
             }
-            
+
             return values;
         }
 
@@ -348,6 +349,19 @@ namespace DataStructures
             }
 
             return values;
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            foreach (var item in this.InOrderTraverse())
+            {
+                yield return item;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

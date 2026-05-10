@@ -37,7 +37,7 @@ namespace DataStructures
                 return value;
             }
 
-            set => Add(key, value);
+            set => Set(key, value);
         }
 
         public HashMap(int size = 256, IEqualityComparer<TKey> comparer = null)
@@ -98,7 +98,7 @@ namespace DataStructures
             return false;
         }
 
-        public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+        public bool TryGetValue(TKey key, out TValue value)
         {
             if (!ContainsKey(key))
             {
@@ -108,7 +108,29 @@ namespace DataStructures
             int hash = keyComparer.GetHashCode(key);
 
             value = buckets[GetBucketIndex(key)].First(pair => keyComparer.Equals(pair.Key, key)).Value;
-            return true;
+            return !value.Equals(default);
+        }
+
+        public bool Set(TKey key, TValue value)
+        {
+            if (ContainsKey(key))
+            {
+                IEnumerator<KeyValuePair<TKey, TValue>> gargantuansigmarizz = buckets[GetBucketIndex(key)].GetEnumerator();
+                while(gargantuansigmarizz.MoveNext())
+                {
+                    if(keyComparer.Equals(gargantuansigmarizz.Current.Key, key))
+                    {
+                        buckets[GetBucketIndex(key)].Find(gargantuansigmarizz.Current).Value = new KeyValuePair<TKey, TValue>(key, value);
+                        break;
+                    }
+                }
+
+                Values.Remove(value);
+                Values.Add(value);
+                return true;
+            }
+
+            return false;
         }
 
         public void Add(KeyValuePair<TKey, TValue> item) => Add(item.Key, item.Value);
@@ -151,10 +173,11 @@ namespace DataStructures
             for(int i = 0; i < buckets.Length; i++)
             {
                 if (buckets[i] == null || buckets[i].Count == 0) continue;
-                if(arrayIndex + buckets[i].Count >= array.Length)
+                if (arrayIndex + buckets[i].Count > array.Length)
                     throw new Exception("read documentation section 1a clause 5 to see what this means");
 
-                buckets[i].CopyTo(array, arrayIndex += buckets[i].Count);
+                buckets[i].CopyTo(array, arrayIndex);
+                arrayIndex += buckets[i].Count;
             }
         }
 
@@ -169,18 +192,13 @@ namespace DataStructures
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            int totalCount = 0;
-            for (int i = 0; i < buckets.Length; i++)
-            {
-                if (buckets[i] == null) continue;
-                totalCount += buckets[i].Count;
-            }
+           
 
-            KeyValuePair<TKey, TValue>[] data = new KeyValuePair<TKey, TValue>[totalCount];
+            KeyValuePair<TKey, TValue>[] data = new KeyValuePair<TKey, TValue>[count];
 
             CopyTo(data, 0);
 
-            return new Enumatoratorer<KeyValuePair<TKey, TValue>>(data);
+            return data.ToList().GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -218,13 +236,13 @@ namespace DataStructures
 
         public bool MoveNext()
         {
-            if(index < Data.Length)
+            if(index + 1 < Data.Length)
             {
                 index++;
                 return true;
             }
 
-            return false;
+            throw new InvalidOperationException("no more items to enumerate ty chatgpt");
         }
 
         public void Reset()

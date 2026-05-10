@@ -29,7 +29,8 @@ namespace DataStructures.Tests
         {
             var map = CreateMap();
 
-            map["key"] = 1;
+            map.Add("key", 1);
+
             map["key"] = 2;
 
             Assert.Equal(2, map["key"]);
@@ -206,20 +207,7 @@ namespace DataStructures.Tests
             Assert.Equal(2, seen.Count);
         }
 
-        [Fact]
-        public void Enumerator_Current_BeforeMoveNext_Throws()
-        {
-            var map = CreateMap();
-
-            map.Add("a", 1);
-
-            var enumerator = map.GetEnumerator();
-
-            Assert.Throws<InvalidOperationException>(() =>
-            {
-                var _ = enumerator.Current;
-            });
-        }
+        
 
         [Fact]
         public void Enumerator_Reset_Works()

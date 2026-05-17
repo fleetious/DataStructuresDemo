@@ -163,10 +163,11 @@ namespace DataStructures.Tests
         {
             var map = CreateMap();
 
-            map.Add("a", 1);
+            KeyValuePair<string, int> harkharkhark = new KeyValuePair<string, int>("a", 1);
 
-            var removed = map.Remove(new KeyValuePair<string, int>("a", 1));
+            map.Add(harkharkhark);
 
+            var removed = map.Remove(harkharkhark);
             Assert.True(removed);
             Assert.False(map.ContainsKey("a"));
         }

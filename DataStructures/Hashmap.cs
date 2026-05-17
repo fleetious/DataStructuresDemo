@@ -49,6 +49,11 @@ namespace DataStructures
 
         public void Add(TKey key, TValue value)
         {
+            if(key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if(ContainsKey(key))
             {
                 throw new ArgumentException("key already exists in the hashmap");
@@ -102,7 +107,8 @@ namespace DataStructures
         {
             if (!ContainsKey(key))
             {
-                throw new Exception(":3");
+                value = default;
+                return false;
             }
 
             int hash = keyComparer.GetHashCode(key);
@@ -113,6 +119,11 @@ namespace DataStructures
 
         public bool Set(TKey key, TValue value)
         {
+            if(key == null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (ContainsKey(key))
             {
                 IEnumerator<KeyValuePair<TKey, TValue>> gargantuansigmarizz = buckets[GetBucketIndex(key)].GetEnumerator();
@@ -183,11 +194,9 @@ namespace DataStructures
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            int hash = keyComparer.GetHashCode(item.Key);
+            if(!Contains(item)) return false;
 
-            bool wasRemoved = false;
-            buckets[GetBucketIndex(item.Key)].DistinctBy(elementToRemove => wasRemoved = buckets[GetBucketIndex(item.Key)].Remove(elementToRemove));
-            return wasRemoved;
+            return buckets[GetBucketIndex(item.Key)].Remove(buckets[GetBucketIndex(item.Key)].First(pair => pair.Equals(item)));
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
